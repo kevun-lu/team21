@@ -11,8 +11,6 @@ load_dotenv()
 
 import os
 from supabase import create_client, Client
-from dotenv import load_dotenv
-load_dotenv()
 
 # Default colors and size
 BLACK = "#000000"
