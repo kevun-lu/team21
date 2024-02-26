@@ -27,6 +27,11 @@ key = os.environ.get("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 supabase = create_client(url,key)
 data, count = supabase.table('players').insert({"id": 1, "code_name": "test"}).execute()
 
+# Starts up the udp server
+# def startUDP():
+#     command = ["python3", "UDP_Client.py"]
+#     subprocess.run(command)
+
 # Creates tk object for window
 window = Tk()
 window.title("Player Entry Screen")
