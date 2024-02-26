@@ -2,7 +2,7 @@ import socket
 import keyboard
 
 # Define local IP address and port  
-LOCAL_IP = "localhost"  # Change to what is needed for both these<<
+LOCAL_IP = "192.168.1.100"  # Change to what is needed for both these<<
 LOCAL_PORT = 7501
 BUFFERSIZE = 2400
 
