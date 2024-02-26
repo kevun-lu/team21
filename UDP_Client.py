@@ -12,7 +12,7 @@ def genEqupimentCode():
 
 #IP and Port can be changed as needed.
 SERVER_IP = "localhost"
-SERVER_PORT = 8080
+SERVER_PORT = 7500
 equipmentID = str(genEqupimentCode())
 BUFFERSIZE = 1024
 
