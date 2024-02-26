@@ -5,8 +5,9 @@ Necessary python package installations (python3 version):
 tkinter
 supabase
 dotenv
+pillow
 
 
 To Run this Project: 
-- main.py
+- python3 main.py
   
