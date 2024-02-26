@@ -3,7 +3,7 @@ import keyboard
 
 # Define local IP address and port  
 LOCAL_IP = "localhost"  # Change to what is needed for both these<<
-LOCAL_PORT = 8080
+LOCAL_PORT = 7501
 BUFFERSIZE = 2400
 
 # Message to be sent back from the server to the client
