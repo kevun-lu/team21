@@ -1,12 +1,13 @@
 import socket
-
+import keyboard
 
 # Define local IP address and port  
-LOCAL_IP = "localhost"
+LOCAL_IP = "localhost"  # Change to what is needed for both these<<
 LOCAL_PORT = 8080
+BUFFERSIZE = 2400
 
 # Message to be sent back from the server to the client
-MsgFrServer = str.encode("Message received.")
+MsgFromServer = str.encode("Hello New Client.")
 
 # Create a UDP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -14,28 +15,51 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.bind((LOCAL_IP, LOCAL_PORT))
 print("UDP system is online.")
 
-print("How many total players in the game?")
-Player_Count = int(input())
-# Initialize an empty dictionary to store player information
-Player_List = {}
-
 # Receive player information and add them to the player list
-while (Player_Count > 0):
-    data = sock.recvfrom(1024)
-    playername = data[0]
-    addr = data[1]
-    Player_List[playername] = addr
-    Player_Count = Player_Count-1
-# Send a message to indicate player initialization is complete
-sock.sendto(str.encode("Player initialization complete"), addr)
-print(Player_List)
+# Initialize an empty dictionary to store player information
+Player_List = []
+PlayerSelection = True
+while PlayerSelection:
+    # Will end player/equipment code sync and satrt the game by pressing f3
+    key = keyboard.read_key()
+    if key != "f3":
+        data = sock.recvfrom(1024)
+        playername = data[0]
+        addr = data[1]
+        Player_List.append(playername)
+        # Send a message to indicate player initialization is complete        
+        sock.sendto(str.encode("Player initialization complete"), addr)
+        print("Player List:", Player_List)  # Debugging: Print updated player list
+        continue
+    if key == "f3":
+        PlayerSelection = False
+        print("Lock and Load")
+        break
+        
+    
 
+GameState = True
 # Continuously receive messages from clients and send response
-while True: 
-    # Buffer size is 1024 bytes. This will empty the buffer continually.
-    data = sock.recvfrom(1024)
-    PlayerName = data[0]
-    addr = data[1]
-    print ("C2S:", PlayerName)
-    print ("Client's IP: ", data[1])
-    sock.sendto(MsgFrServer, addr)
+while GameState:
+    # Will end the server prematurely by pressing q
+    
+    key = keyboard.read_key()
+    if key != "q":
+        # Buffer size is 1024 bytes. This will empty the buffer continually.
+        addressPair = sock.recvfrom(1024)
+        eqipmentID = addressPair[0]
+        address = addressPair[1]
+
+        clientMsg = "EqID:{}".format(eqipmentID)
+        clientIP = "Client IP:{}".format(address)
+        print(clientMsg)
+        print(clientIP)
+
+        # The reply to the client
+        sock.sendto(MsgFromServer, addr)
+    else:
+        GameState = False
+        print("Shutting Server Down...")
+        sock.close()
+        break
+    
