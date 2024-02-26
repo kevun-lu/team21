@@ -22,10 +22,6 @@ def player_entry_screen():
     # Set window color
     window.configure(background=BLACK)
 
-    # Create Buttons
-    button = Button(window, text="Add", command=search_id)
-    button.pack()
-
     # Create red background
     red_background = Label(
         window,
@@ -69,8 +65,8 @@ def player_entry_screen():
     green_team_label.place(x=660, y=60)
 
     # Create red ID inputs
-    red_id_inputs = []
-    red_codename_inputs = []
+    red_id_box_list = []
+    red_codename_box_list = []
     for i in range(1, 16):
         red_id_input = Text(
             window,
@@ -79,7 +75,7 @@ def player_entry_screen():
             height=ID_LABEL_HEIGHT
         )
         red_id_input.place(x=250, y=100 + 40 * (i - 1))
-        red_id_inputs.append(red_id_input)
+        red_id_box_list.append(red_id_input)
 
         red_codename_input = Text(
             window,
@@ -88,11 +84,11 @@ def player_entry_screen():
             height=ID_LABEL_HEIGHT
         )
         red_codename_input.place(x=425, y=100 + 40 * (i - 1))
-        red_codename_inputs.append(red_codename_input)
+        red_codename_box_list.append(red_codename_input)
 
     # Create green ID inputs
-    green_id_inputs = []
-    green_codename_inputs = []
+    green_id_box_list = []
+    green_codename_box_list = []
     for i in range(1, 16):
         green_id_input = Text(
             window,
@@ -101,7 +97,7 @@ def player_entry_screen():
             height=ID_LABEL_HEIGHT
         )
         green_id_input.place(x=605, y=100 + 40 * (i - 1))
-        green_id_inputs.append(green_id_input)
+        green_id_box_list.append(green_id_input)
 
         green_codename_input = Text(
             window,
@@ -110,7 +106,7 @@ def player_entry_screen():
             height=ID_LABEL_HEIGHT
         )
         green_codename_input.place(x=780, y=100 + 40 * (i - 1))
-        green_codename_inputs.append(green_codename_input)
+        green_codename_box_list.append(green_codename_input)
 
 
     # Create start button functionality
@@ -135,7 +131,7 @@ def player_entry_screen():
     # Create clear all entries button functionality
     def clear_all_entries():
         for red_id_input, red_codename_input, green_id_input, green_codename_input in zip(
-                red_id_inputs, red_codename_inputs, green_id_inputs, green_codename_inputs):
+                red_id_box_list, red_codename_box_list, green_id_box_list, green_codename_box_list):
             red_data = red_id_input.get("1.0", "end").strip()
             red_codename = red_codename_input.get("1.0", "end").strip()
             green_data = green_id_input.get("1.0", "end").strip()
@@ -144,6 +140,27 @@ def player_entry_screen():
             print("Red Codename:", red_codename)
             print("Green ID:", green_data)
             print("Green Codename:", green_codename)
+    #list of ID not box
+    red_id_list = []
+    green_id_list = []
+    red_codename_list = []
+    green_codename_list = []
+
+    
+    
+    def search_id():
+        print("Search")
+        for red_id_input, red_codename_input, green_id_input, green_codename_input in zip(red_id_box_list, red_codename_box_list, green_id_box_list, green_codename_box_list):
+            red_data = red_id_input.get("1.0", "end").strip()
+            red_id_list.append(red_data)
+            red_codename = red_codename_input.get("1.0", "end").strip()
+            red_codename_list.append(red_codename)
+            green_data = green_id_input.get("1.0", "end").strip()
+            green_id_list.append(green_data)
+            green_codename = green_codename_input.get("1.0", "end").strip()
+            green_codename_list.append(green_codename)
+    def update_codename():
+        print("Update")
 
 
     # Create clear all entries button
@@ -159,11 +176,26 @@ def player_entry_screen():
     )
     clear_button.place(x=1080, y=690)
 
+
+    #Search ID on database for red team
+    search_button = Button(window, text="Search", command=search_id)
+    search_button.place(x=300, y=700)
+    #Update codename for red team
+    update_button = Button(window, text="Update", command=update_codename)
+    update_button.place(x=450, y =700)
+    #Search ID on database for green team
+    search_button = Button(window, text="Search", command=search_id)
+    search_button.place(x=650, y=700)
+    #Update codename for green team
+    update_button = Button(window, text="Update", command=update_codename)
+    update_button.place(x=800, y =700)
+
+
     # Shows window
     window.mainloop()
 
-def search_id():
-    print("Search")
 
 
+
+player_entry_screen()
 player_entry_screen()
