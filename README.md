@@ -1,4 +1,13 @@
 # team21
+|  GitName | Student |
+|----------|---------|
+|Astr0Jay|Justin A.|
+|yukiikebe|Yuki I.|
+|takekikawate|Takeki K.|
+|kevun-lu| Kevin L.|
+|jacobround|Jacob R.|
+|kevv10|Kevin V.|
+
 software-engineering group: takeki, jacob, yuki, kevin^2, Justin
 
 Necessary python package installations:
