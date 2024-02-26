@@ -8,7 +8,6 @@
 |jacobround|Jacob R.|
 |kevv10|Kevin V.|
 
-software-engineering group: takeki, jacob, yuki, kevin^2, Justin
 
 Necessary python package installations:
 tkinter
