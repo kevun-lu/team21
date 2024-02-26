@@ -1,5 +1,6 @@
 # team21
 
+
 Necessary python package installations:
 tkinter
 supabase
@@ -18,7 +19,6 @@ button for that team. This will then send those new ids and codenames to the dat
 
 Prior to starting the server first check the LOCAL_IP and LOCAL_PORT variables in the code.
 If you skip that first step it will be near impossible to achieve successful udp communication.
-By default both IP addresses are set to "localhost"
 To run the udp server run the command "python3 UDP_Server.py".
 Then each client will need to run the command "python3 UDP_Client.py".
 Once all the players are connected to the udp server press f3 to lock in the equipment and start the game.
