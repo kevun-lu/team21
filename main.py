@@ -9,6 +9,9 @@ from tkinter import *
 from dotenv import load_dotenv
 load_dotenv()
 
+from splash_screen import splash_screen
+from entryScreen import player_entry_screen
+
 import os
 from supabase import create_client, Client
 
@@ -26,6 +29,9 @@ url = os.environ.get("https://rjexhdkzwhcnrcuvzute.supabase.co")
 key = os.environ.get("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJqZXhoZGt6d2hjbnJjdXZ6dXRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDc3NjAwMTMsImV4cCI6MjAyMzMzNjAxM30.2MMcSmeZo85VlCMBsPI0ehCnGBrCiIZoqx722bQA0C4")
 supabase = create_client(url,key)
 data, count = supabase.table('players').insert({"id": 1, "code_name": "test"}).execute()
+
+splash_screen()
+player_entry_screen(supabase)
 
 # Creates tk object for window
 window = Tk()
