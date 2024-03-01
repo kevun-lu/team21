@@ -1,65 +1,80 @@
 import socket
-import keyboard
 
-# Define local IP address and port  
-LOCAL_IP = "localhost"  # Change to what is needed for both these<<
-LOCAL_PORT = 7501
-BUFFERSIZE = 2400
+# Define IP address and ports
+BUFFERSIZE = 1024
+serverPort = 7500
+clientPort = 7501
+ipAddress = "localhost"
+NumPlayers = 0
+MaxPlayers = 10
+
+# Asks for number of players and stores it as an int
+NumPlayers = input("How many players on each team? ")
+NumPlayers = int(NumPlayers)
+
+# Stores each player's eqid
+RedTeam = [0,0,0,0,0,0,0,0,0,0]
+for i in range (0, NumPlayers):
+    RedTeam[i] = input("Equipment code for RED team member " + str(i+1) + ": ")
+
+GreenTeam = [0,0,0,0,0,0,0,0,0,0]
+for i in range (0, NumPlayers):
+    GreenTeam[i] = input("Equipment code for GREEN team member " + str(i+1) + ": ")
+
 
 # Message to be sent back from the server to the client
-MsgFromServer = str.encode("Hello New Client.")
+ServertoClientmsg = str.encode('Hello, New Client ')
 
-# Create a UDP socket
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+# Create UDP server socket for RECEIVING
+ServerReceives = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+# Create UDP client socket for SENDING
+ServerSends = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
 # Bind the socket to the local address and port
-sock.bind((LOCAL_IP, LOCAL_PORT))
-print("UDP system is online.")
+ServerReceives.bind((ipAddress, serverPort))
 
-# Receive player information and add them to the player list
-# Initialize an empty dictionary to store player information
-Player_List = []
-PlayerSelection = True
-while PlayerSelection:
-    # Will end player/equipment code sync and satrt the game by pressing f3
-    key = keyboard.read_key()
-    if key != "f3":
-        data = sock.recvfrom(1024)
-        playername = data[0]
-        addr = data[1]
-        Player_List.append(playername)
-        # Send a message to indicate player initialization is complete        
-        sock.sendto(str.encode("Player initialization complete"), addr)
-        print("Player List:", Player_List)  # Debugging: Print updated player list
-        continue
-    if key == "f3":
-        PlayerSelection = False
-        print("Lock and Load")
-        break
-        
-    
+print('Waiting on start code... ')
+
+shortcut = '0'
+while shortcut != '202':
+    shortcut, clientaddress = ServerReceives.recvfrom(BUFFERSIZE)
+    shortcut = shortcut.decode('utf-8')
+    print ('')
+    print (shortcut)
+
 
 GameState = True
-# Continuously receive messages from clients and send response
+
 while GameState:
-    # Will end the server prematurely by pressing q
+    ServertoClientmsg = ''
     
-    key = keyboard.read_key()
-    if key != "q":
-        # Buffer size is 1024 bytes. This will empty the buffer continually.
-        addressPair = sock.recvfrom(1024)
-        eqipmentID = addressPair[0]
-        address = addressPair[1]
+    # if red player tags, green player
+    # msg = '11'
+    
+    # if green player tags, red player
+    # msg = '33'
 
-        clientMsg = "EqID:{}".format(eqipmentID)
-        clientIP = "Client IP:{}".format(address)
-        print(clientMsg)
-        print(clientIP)
+    # if green player tags red's base 
+    # msg = '55'
 
-        # The reply to the client
-        sock.sendto(MsgFromServer, addr)
-    else:
+    # if red player tags green's base 
+    # msg = '77'
+
+    print("Sending to client: " + ServertoClientmsg)
+    ServerSends.sendto(str.encode(ServertoClientmsg), (ipAddress, clientPort))
+    
+    shortcut, clientaddress = ServerReceives.recvfrom(BUFFERSIZE)
+    shortcut = shortcut.decode('utf-8')
+    print ("From the Client: ")
+    print (shortcut)
+    
+    #increments player on team
+    i = i + 1
+	
+    if shortcut == '221':
+        ServerSends.close()
+        ServerReceives.close()
         GameState = False
-        print("Shutting Server Down...")
-        sock.close()
-        break
-    
+
+print("The game is over. ")
