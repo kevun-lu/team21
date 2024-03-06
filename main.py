@@ -11,8 +11,8 @@ from supabase import create_client, Client
 
 
 #initialize supabase
-url = os.environ.get("https://rjexhdkzwhcnrcuvzute.supabase.co")
-key = os.environ.get("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJqZXhoZGt6d2hjbnJjdXZ6dXRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDc3NjAwMTMsImV4cCI6MjAyMzMzNjAxM30.2MMcSmeZo85VlCMBsPI0ehCnGBrCiIZoqx722bQA0C4")
+url = os.environ.get("supabase_url")
+key = os.environ.get("supabase_key")
 supabase = create_client(url,key)
 
 splash_screen()
