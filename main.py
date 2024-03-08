@@ -4,12 +4,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from splash_screen import splash_screen
-from entryScreen import player_entry_screen
+from entryScreen import Entry_Screen
 
 import os
 from supabase import create_client, Client
 
 #testing push
+
+#test again
 
 #initialize supabase
 url = os.environ.get("supabase_url")
@@ -17,7 +19,7 @@ key = os.environ.get("supabase_key")
 supabase = create_client(url,key)
 
 splash_screen()
-player_entry_screen(supabase)
+entry_screen = Entry_Screen(supabase)
 
 
 # Starts up the udp server
