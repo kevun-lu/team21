@@ -14,272 +14,245 @@ BUTTON_HEIGHT = 4
 
 
 
-def player_entry_screen(supabase):
-    # Creates tk object for window
-    window = Tk()
-    window.title("Player Entry Screen")
-    # Set window size
-    window.geometry("1200x800")
-    # Set window color
-    window.configure(background=BLACK)
 
-    # Create red background
-    red_background = Label(
-        window,
-        background=RED,
-        width=50,
-        height=45
-    )
-    red_background.place(x=245, y=50)
+class Entry_Screen():
+    def __init__(self, supabase):
+        self.red_team_players = []
+        self.green_team_players = []
+        self.supabase = supabase
+        self.current_red_index = 0
+        self.current_green_index = 0
 
-    # Create green background
-    green_background = Label(
-        window,
-        background=GREEN,
-        width=50,
-        height=45
-    )
-    green_background.place(x=600, y=50)
+        self.make_boxes()
 
-    # Create red team header
-    red_team_label = Label(
-        window,
-        text="RED TEAM",
-        background=WHITE,
-        foreground=RED,
-        font=FONT_SIZE,
-        width=20,
-        height=1
-    )
-    red_team_label.place(x=315, y=60)
+    def make_boxes(self):
+        # Creates tk object for window
+        self.window = Tk()
+        self.window.title("Player Entry Screen")
+        # Set window size
+        self.window.geometry("1200x800")
+        # Set window color
+        self.window.configure(background=BLACK)
 
-    # Create green team header
-    green_team_label = Label(
-        window,
-        text="GREEN TEAM",
-        background=WHITE,
-        foreground=GREEN,
-        font=FONT_SIZE,
-        width=20,
-        height=1
-    )
-    green_team_label.place(x=660, y=60)
-
-    # Create red ID inputs
-    red_id_box_list = []
-    red_codename_box_list = []
-    for i in range(1, 16):
-        red_id_input = Text(
-            window,
-            font=FONT_SIZE,
-            width=ID_LABEL_WIDTH,
-            height=ID_LABEL_HEIGHT
+        # Create red background
+        self.red_background = Label(
+            self.window,
+            background=RED,
+            width=50,
+            height=45
         )
-        red_id_input.place(x=250, y=100 + 40 * (i - 1))
-        red_id_box_list.append(red_id_input)
+        self.red_background.place(x=245, y=50)
 
-        red_codename_input = Text(
-            window,
-            font=FONT_SIZE,
-            width=ID_LABEL_WIDTH,
-            height=ID_LABEL_HEIGHT
+        # Create green background
+        self.green_background = Label(
+            self.window,
+            background=GREEN,
+            width=50,
+            height=45
         )
-        red_codename_input.place(x=425, y=100 + 40 * (i - 1))
-        red_codename_box_list.append(red_codename_input)
+        self.green_background.place(x=600, y=50)
 
-    # Create green ID inputs
-    green_id_box_list = []
-    green_codename_box_list = []
-    for i in range(1, 16):
-        green_id_input = Text(
-            window,
+        # Create red team header
+        self.red_team_label = Label(
+            self.window,
+            text="RED TEAM",
+            background=WHITE,
+            foreground=RED,
             font=FONT_SIZE,
-            width=ID_LABEL_WIDTH,
-            height=ID_LABEL_HEIGHT
+            width=20,
+            height=1
         )
-        green_id_input.place(x=605, y=100 + 40 * (i - 1))
-        green_id_box_list.append(green_id_input)
+        self.red_team_label.place(x=315, y=60)
 
-        green_codename_input = Text(
-            window,
+        # Create green team header
+        self.green_team_label = Label(
+            self.window,
+            text="GREEN TEAM",
+            background=WHITE,
+            foreground=GREEN,
             font=FONT_SIZE,
-            width=ID_LABEL_WIDTH,
-            height=ID_LABEL_HEIGHT
+            width=20,
+            height=1
         )
-        green_codename_input.place(x=780, y=100 + 40 * (i - 1))
-        green_codename_box_list.append(green_codename_input)
+        self.green_team_label.place(x=660, y=60)
+
+        # Create red ID inputs
+        self.red_id_box_list = []
+        self.red_codename_box_list = []
+        for i in range(1, 16):
+            red_id_input = Text(
+                self.window,
+                font=FONT_SIZE,
+                width=ID_LABEL_WIDTH,
+                height=ID_LABEL_HEIGHT
+            )
+            red_id_input.place(x=250, y=100 + 40 * (i - 1))
+            self.red_id_box_list.append(red_id_input)
+
+            red_codename_input = Text(
+                self.window,
+                font=FONT_SIZE,
+                width=ID_LABEL_WIDTH,
+                height=ID_LABEL_HEIGHT
+            )
+            red_codename_input.place(x=425, y=100 + 40 * (i - 1))
+            self.red_codename_box_list.append(red_codename_input)
+
+        # Create green ID inputs
+        self.green_id_box_list = []
+        self.green_codename_box_list = []
+        for i in range(1, 16):
+            green_id_input = Text(
+                self.window,
+                font=FONT_SIZE,
+                width=ID_LABEL_WIDTH,
+                height=ID_LABEL_HEIGHT
+            )
+            green_id_input.place(x=605, y=100 + 40 * (i - 1))
+            self.green_id_box_list.append(green_id_input)
+
+            green_codename_input = Text(
+                self.window,
+                font=FONT_SIZE,
+                width=ID_LABEL_WIDTH,
+                height=ID_LABEL_HEIGHT
+            )
+            green_codename_input.place(x=780, y=100 + 40 * (i - 1))
+            self.green_codename_box_list.append(green_codename_input)
 
 
-    # Create start button functionality
-    def start():
-        print("Function not implemented yet")
-
-
-    # Create start button
-    start_button = Button(
-        window,
-        text="Start\n",
-        background=WHITE,
-        foreground=GREEN,
-        font=FONT_SIZE,
-        width=BUTTON_WIDTH,
-        height=BUTTON_HEIGHT,
-        command=start
-    )
-    start_button.place(x=0, y=690)
-
-
-    # Create clear all entries button functionality
-    def clear_all_entries():
-        for red_id_input, red_codename_input, green_id_input, green_codename_input in zip(
-                red_id_box_list, red_codename_box_list, green_id_box_list, green_codename_box_list):
-            red_data = red_id_input.get("1.0", "end").strip()
-            red_codename = red_codename_input.get("1.0", "end").strip()
-            green_data = green_id_input.get("1.0", "end").strip()
-            green_codename = green_codename_input.get("1.0", "end").strip()
-            red_id_input.delete("1.0", "end")
-            red_codename_input.delete("1.0", "end")
-            green_id_input.delete("1.0", "end")
-            green_codename_input.delete("1.0", "end")
-            print("Red ID:", red_data)
-            print("Red Codename:", red_codename)
-            print("Green ID:", green_data)
-            print("Green Codename:", green_codename)
-    #list of ID not box
-    red_id_list = []
-    green_id_list = []
-    red_codename_list = []
-    green_codename_list = []
-
-    def search_id_red():
-        print("Search")
-        color = 1 #red=1 green=2
-        for red_id_input, red_codename_input, green_id_input, green_codename_input in zip(red_id_box_list, red_codename_box_list, green_id_box_list, green_codename_box_list):
-            red_data = red_id_input.get("1.0", "end").strip()
-            red_id_list.append(red_data)
-            # red_codename = red_codename_input.get("1.0", "end").strip()
-            # # red_codename_list.append(red_codename)
-            # green_data = green_id_input.get("1.0", "end").strip()
-            # green_id_list.append(green_data)
-            # green_codename = green_codename_input.get("1.0", "end").strip()
-            # green_codename_list.append(green_codename)
-            #Red
-        for red_id in red_id_list:
-            if red_id != "":
-                data, count = supabase.table('players').select('*').eq('id', int(red_id)).execute()
-                if(data[1] != []):
-                    print('print data[1][0]["code_name"] to codename box')
-                    print(red_id)
-                    print(data[1][0]["code_name"])
-                    red_codename_list.append(data[1][0]["code_name"])
-                else:
-                    print("you need to add a codename")
-                    red_codename_list.append("need new code_name")
-            # #Green
-            # for green_id in green_id_list:
-            #     if green_id != "":
-            #         data, count = supabase.table('players').select('*').eq('id', int(green_id)).execute()
-            #         if(data[1] != []):
-            #             print('print data[1][0]["code_name"] to codename box')
-            #             print(green_id)
-            #             print(data[1][0]["code_name"])
-            #             green_codename_list.append(data[1][0]["code_name"])
-            #         else:
-            #             print("you need to add a codename")
-            #             green_codename_list.append("need new code_name")     
-        display_codename(color)
-    #Green team  
-    def search_id_green():
-        print("Search_green")
-        color = 2 #red=1 green=2
-
-        for red_id_input, red_codename_input, green_id_input, green_codename_input in zip(red_id_box_list, red_codename_box_list, green_id_box_list, green_codename_box_list):
-            red_data = red_id_input.get("1.0", "end").strip()
-            green_data = green_id_input.get("1.0", "end").strip()
-            green_id_list.append(green_data)
-            #Green
-        for green_id in green_id_list:
-            if green_id != "":
-                data, count = supabase.table('players').select('*').eq('id', int(green_id)).execute()
-                if(data[1] != []):
-                    print('print data[1][0]["code_name"] to codename box')
-                    print(green_id)
-                    print(data[1][0]["code_name"])
-                    green_codename_list.append(data[1][0]["code_name"])
-                else:
-                    print("you need to add a codename")
-                    green_codename_list.append("need new code_name")    
-        display_codename(color)
-
-    def display_codename(color):
-        if color == 1:
-            #red
-            for i in range(len(red_codename_list)):
-                red_codename_box_list[i].insert("1.0",red_codename_list[i])
-        else:
-            #green
-            for i in range(len(green_codename_list)):
-                green_codename_box_list[i].insert("1.0",green_codename_list[i])
         
 
-    def update_codename_red():
+
+        # Create start button
+        self.start_button = Button(
+            self.window,
+            text="Start\n",
+            background=WHITE,
+            foreground=GREEN,
+            font=FONT_SIZE,
+            width=BUTTON_WIDTH,
+            height=BUTTON_HEIGHT,
+            command=self.start()
+        )
+        self.start_button.place(x=0, y=690)
+
+
+        # Create clear all entries button
+        self.clear_button = Button(
+            self.window,
+            text="Clear\nall entries",
+            background=WHITE,
+            foreground=GREEN,
+            font=FONT_SIZE,
+            width=BUTTON_WIDTH,
+            height=BUTTON_HEIGHT,
+            command=self.clear_all_entries()
+        )
+        self.clear_button.place(x=1080, y=690)  
+
+
+        #Search ID on database for red team
+        search_button = Button(self.window, text="Search", command=self.search_id_red)
+        search_button.place(x=300, y=700)
+        #Update codename for red team
+        update_button = Button(self.window, text="Update", command=self.update_codename_red)
+        update_button.place(x=450, y =700)
+        #Search ID on database for green team
+        search_button = Button(self.window, text="Search", command=self.search_id_green)
+        search_button.place(x=650, y=700)
+        #Update codename for green team
+        update_button = Button(self.window, text="Update", command=self.update_codename_green)
+        update_button.place(x=800, y =700)
+
+
+        # Shows window
+        self.window.mainloop()
+
+
+        # Create clear all entries button functionality
+    def clear_all_entries(self):
+        print("not implemented")
+
+        
+    # Create start button functionality
+    def start(self):
+        print("Function not implemented yet")
+
+    def search_id_red(self):
+        print("Search")
+        color = 1 #red=1 green=2
+        red_id_input = self.red_id_box_list[self.current_red_index]
+        red_data = int(red_id_input.get("1.0", "end").strip())
+        self.red_team_players.append({"id": red_data, "codename": "", "equipment_id": None})
+        
+        data, count = self.supabase.table('players').select('*').eq('id', red_data).execute()
+        
+        if(data[1] != []):
+            print(data[1][0]["codename"])
+            self.red_team_players[self.current_red_index]["codename"] = data[1][0]["codename"]
+        else:
+            print("you need to add a codename")
+            self.red_team_players[self.current_red_index]["codename"] = "need new codename"
+
+        
+        self.display_codename(color)
+    #Green team  
+    def search_id_green(self):
+        print("Search_green")
+        color = 2 #red=1 green=2
+        green_id_input = self.green_id_box_list[self.current_green_index]
+        green_data = int(green_id_input.get("1.0", "end").strip())
+        self.green_team_players.append({"id": green_data, "codename": "", "equipment_id": None})
+        
+        data, count = self.supabase.table('players').select('*').eq('id', green_data).execute()
+        
+        if(data[1] != []):
+            print(data[1][0]["codename"])
+            self.green_team_players[self.current_green_index]["codename"] = data[1][0]["codename"]
+        else:
+            print("you need to add a codename")
+            self.green_team_players[self.current_green_index]["codename"] = "need new codename"
+
+        self.current_green_index += 1
+        self.display_codename(color)
+
+    def display_codename(self, color):
+        if color == 1:
+            #red
+            for i in range(len(self.red_team_players)):
+                self.red_codename_box_list[i].delete("1.0", END)
+                self.red_codename_box_list[i].insert("1.0",self.red_team_players[i]["codename"])
+        else:
+            #green
+            for i in range(len(self.green_team_players)):
+                self.green_codename_box_list[i].delete("1.0", END)
+                self.green_codename_box_list[i].insert("1.0",self.green_team_players[i]["codename"])
+        
+
+    def update_codename_red(self):
         print("Update")
-        color = 1
-        red_codename_list.clear()
-        for red_id_input, red_codename_input, green_id_input, green_codename_input in zip(red_id_box_list, red_codename_box_list, green_id_box_list, green_codename_box_list):
+        
+        if self.red_team_players[self.current_red_index]["codename"] == "need new codename":
+            red_codename_input = self.red_codename_box_list[self.current_red_index]
             red_codename = red_codename_input.get("1.0", "end").strip()
-            red_codename_list.append(red_codename)
-        for i in range(len(red_id_list)):
-            if red_id_list[i] != "":
-                data, count = supabase.table('players').select('*').eq('id', int(red_id_list[i])).execute()
-                if(data[1] != []):
-                    pass
-                else:
-                    supabase.table('players').insert({"id": red_id_list[i], "code_name": red_codename_list[i]}).execute()
+            self.red_team_players[self.current_red_index]["codename"] = red_codename
+
+            self.supabase.table('players').insert({"id": self.red_team_players[self.current_red_index]["id"], "codename": red_codename}).execute()
+
+        self.current_red_index += 1
     
-    def update_codename_green():
+    def update_codename_green(self):
         print("Update")
-        color = 1
-        green_codename_list.clear()
-        for red_id_input, red_codename_input, green_id_input, green_codename_input in zip(red_id_box_list, red_codename_box_list, green_id_box_list, green_codename_box_list):
+        
+        if self.green_team_players[self.current_green_index]["codename"] == "need new codename":
+            green_codename_input = self.green_codename_box_list[self.current_green_index]
             green_codename = green_codename_input.get("1.0", "end").strip()
-            green_codename_list.append(green_codename)
-        for i in range(len(green_id_list)):
-            if green_id_list[i] != "":
-                data, count = supabase.table('players').select('*').eq('id', int(green_id_list[i])).execute()
-                if(data[1] != []):
-                    pass
-                else:
-                    supabase.table('players').insert({"id": green_id_list[i], "code_name": green_codename_list[i]}).execute()
+            self.green_team_players[self.current_green_index]["codename"] = green_codename
 
+            self.supabase.table('players').insert({"id": self.green_team_players[self.current_green_index]["id"], "codename": green_codename}).execute()
 
+        self.current_green_index += 1
+    
 
-    # Create clear all entries button
-    clear_button = Button(
-        window,
-        text="Clear\nall entries",
-        background=WHITE,
-        foreground=GREEN,
-        font=FONT_SIZE,
-        width=BUTTON_WIDTH,
-        height=BUTTON_HEIGHT,
-        command=clear_all_entries
-    )
-    clear_button.place(x=1080, y=690)
-
-    #Search ID on database for red team
-    search_button = Button(window, text="Search", command=search_id_red)
-    search_button.place(x=300, y=700)
-    #Update codename for red team
-    update_button = Button(window, text="Update", command=update_codename_red)
-    update_button.place(x=450, y =700)
-    #Search ID on database for green team
-    search_button = Button(window, text="Search", command=search_id_green)
-    search_button.place(x=650, y=700)
-    #Update codename for green team
-    update_button = Button(window, text="Update", command=update_codename_green)
-    update_button.place(x=800, y =700)
-
-
-    # Shows window
-    window.mainloop()
+    
