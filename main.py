@@ -9,6 +9,7 @@ from entryScreen import player_entry_screen
 import os
 from supabase import create_client, Client
 
+#testing push
 
 #initialize supabase
 url = os.environ.get("supabase_url")
