@@ -24,13 +24,10 @@ def countdown_start():
     countdown_value = 3
 
     # Use a label to display countdown
-    label = tk.Label(root, text="", font=("Helvetica", 90), fg='red')
+    label = tk.Label(root, text="", font=("Helvetica", 90), fg='orange',bg='black')
     label.pack(expand=True, fill=tk.BOTH)
 
     # Start the countdown
     update_countdown()
 
     root.mainloop()
-
-# Call the function to display the countdown
-countdown_start()
