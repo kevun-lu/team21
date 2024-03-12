@@ -151,7 +151,7 @@ class Entry_Screen():
             font=FONT_SIZE,
             width=BUTTON_WIDTH,
             height=BUTTON_HEIGHT,
-            command=self.start()
+            command=self.start
         )
         self.start_button.place(x=0, y=690)
 
@@ -165,7 +165,7 @@ class Entry_Screen():
             font=FONT_SIZE,
             width=BUTTON_WIDTH,
             height=BUTTON_HEIGHT,
-            command=self.clear_all_entries()
+            command=self.clear_all_entries
         )
         self.clear_button.place(x=1080, y=690)  
 
@@ -196,12 +196,19 @@ class Entry_Screen():
 
         # Create clear all entries button functionality
     def clear_all_entries(self):
-        print("not implemented")
+        for i in range(len(self.red_id_box_list)):
+            self.red_id_box_list[i].delete("1.0", END)
+        for i in range(len(self.green_id_box_list)):
+            self.green_id_box_list[i].delete("1.0", END)
+        for i in range(len(self.red_codename_box_list)):
+            self.red_codename_box_list[i].delete("1.0", END)
+        for i in range(len(self.green_codename_box_list)):
+            self.green_codename_box_list[i].delete("1.0", END)
 
         
     # Create start button functionality
     def start(self):
-        print("Function not implemented yet")
+        self.window.destroy()
 
     def search_id_red(self):
         print("Search")
