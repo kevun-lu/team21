@@ -131,3 +131,7 @@ class Play_Action_Display():
         # Shows window
         self.window.mainloop()
 
+
+supabase = None # add supabase client instance 
+app = Play_Action_Display(supabase)
+
