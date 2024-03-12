@@ -17,9 +17,9 @@ BUTTON_WIDTH = 10
 BUTTON_HEIGHT = 4
 
 class Play_Action_Display():
-    def __init__(self, supabase):
-        self.red_team_players = []
-        self.green_team_players = []
+    def __init__(self, supabase, red_players, green_players):
+        self.red_team_players = red_players
+        self.green_team_players = green_players
         self.supabase = supabase
         self.current_red_index = 0
         self.current_green_index = 0
@@ -132,6 +132,5 @@ class Play_Action_Display():
         self.window.mainloop()
 
 
-supabase = None # add supabase client instance 
-app = Play_Action_Display(supabase)
+
 

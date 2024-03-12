@@ -23,7 +23,7 @@ supabase = create_client(url,key)
 splash_screen()
 entry_screen = Entry_Screen(supabase)
 countdown_start()
-play_action_display = Play_Action_Display(supabase)
+play_action_display = Play_Action_Display(supabase, entry_screen.red_team_players, entry_screen.green_team_players)
 
 # Starts up the udp server
 # def startUDP():
