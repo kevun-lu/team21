@@ -204,6 +204,12 @@ class Entry_Screen():
             self.red_codename_box_list[i].delete("1.0", END)
         for i in range(len(self.green_codename_box_list)):
             self.green_codename_box_list[i].delete("1.0", END)
+        for i in range(len(self.red_equipment_id_list)):
+            self.red_equipment_id_list[i].delete("1.0", END)
+        for i in range(len(self.green_equipment_id_list)):
+            self.green_equipment_id_list[i].delete("1.0", END)
+        self.current_red_index = 0
+        self.current_green_index = 0
 
         
     # Create start button functionality
