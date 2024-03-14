@@ -63,7 +63,7 @@ class Play_Action_Display():
             width=20,
             height=1
         )
-        self.red_team_label.place(x=300, y=90)
+        self.red_team_label.place(x=50, y=90)
         # Create green team header
         self.green_team_label = Label(
             self.window,
@@ -74,7 +74,7 @@ class Play_Action_Display():
             width=20,
             height=1
         )
-        self.green_team_label.place(x=675, y=90)
+        self.green_team_label.place(x=550, y=90)
         # Create current scores label
         self.scores_label = Label(
             text="CURRENT SCORE",
@@ -120,17 +120,38 @@ class Play_Action_Display():
         )
         self.countdown_label.place(x=1000,y=620)
 
+        for i in range(len(self.red_team_players)):
+            self.red_player_label = Label(
+                self.window,
+                text=self.red_team_players[i]["codename"],
+                background=WHITE,
+                foreground=RED,
+                font=FONT_SIZE,
+                width=20,
+                height=1
+            )
+            self.red_player_label.place(x=50,y=120+i*30)
+        for i in range(len(self.green_team_players)):
+            self.green_player_label = Label(
+                self.window,
+                text=self.green_team_players[i]["codename"],
+                background=WHITE,
+                foreground=GREEN,
+                font=FONT_SIZE,
+                width=20,
+                height=1
+            )
+            self.green_player_label.place(x=550,y=120+i*30)
+
         def countdown(count):
             self.countdown_label["text"] = count
             if count > 0:
                self.window.after(1000, countdown, count - 1) 
 
-        data = self.supabase.table('players').select('*').execute()
+        
+        
         countdown(360)
 
         # Shows window
         self.window.mainloop()
-
-
-
 
