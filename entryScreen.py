@@ -141,7 +141,7 @@ class Entry_Screen():
                 height=UDP_ID_HEIGHT
             )
             green_equipment_id_input.place(x=960, y=100 + 40 * (i - 1))
-            self.green_equipment_id_list.append(red_equipment_id_input)
+            self.green_equipment_id_list.append(green_equipment_id_input)
 
         # Create start button
         self.start_button = Button(
