@@ -7,11 +7,11 @@ bufferSize = 1024
 
 class Udp:
 
-    def __init_(self) -> None:
-        self.__sendPort = sendPort
+    def __init__(self):
+        self.__sendPort = 7500
         self.sendSocket = sendSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.sendSocket.bind((localIP,sendPort))
-        self.__receivePort = receivePort
+        self.sendSocket.bind(('127.0.0.1',7500))
+        self.__receivePort = 7501
         self.__receiveSocket = sendPort = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
     def sendData(self, data, port):

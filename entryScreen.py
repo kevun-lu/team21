@@ -18,10 +18,11 @@ BUTTON_HEIGHT = 4
 
 
 class Entry_Screen():
-    def __init__(self, supabase):
+    def __init__(self, supabase, udp):
         self.red_team_players = []
         self.green_team_players = []
         self.supabase = supabase
+        self.udp = udp
         self.current_red_index = 0
         self.current_green_index = 0
 
@@ -208,6 +209,8 @@ class Entry_Screen():
             self.red_equipment_id_list[i].delete("1.0", END)
         for i in range(len(self.green_equipment_id_list)):
             self.green_equipment_id_list[i].delete("1.0", END)
+        self.red_team_players = []
+        self.green_team_players = []
         self.current_red_index = 0
         self.current_green_index = 0
 
@@ -251,7 +254,6 @@ class Entry_Screen():
             print("you need to add a codename")
             self.green_team_players[self.current_green_index]["codename"] = "need new codename"
 
-        self.current_green_index += 1
         self.display_codename(color)
 
     def display_codename(self, color):
@@ -277,7 +279,7 @@ class Entry_Screen():
 
             self.supabase.table('players').insert({"id": self.red_team_players[self.current_red_index]["id"], "codename": red_codename}).execute()
 
-        self.current_red_index += 1
+        
     
     def update_codename_green(self):
         print("Update")
@@ -289,10 +291,18 @@ class Entry_Screen():
 
             self.supabase.table('players').insert({"id": self.green_team_players[self.current_green_index]["id"], "codename": green_codename}).execute()
 
-        self.current_green_index += 1
+        
 
     def read_equipment_id_red(self):
-        pass
+        red_equipment_id = self.red_equipment_id_list[self.current_red_index].get("1.0", "end").strip()
+        self.red_team_players[self.current_red_index]["equipment_id"] = red_equipment_id
+        self.udp.sendEquipmentId(red_equipment_id)
+
+        self.current_red_index += 1
 
     def read_equipment_id_green(self):
-        pass
+        green_equipment_id = self.green_equipment_id_list[self.current_green_index].get("1.0", "end").strip()
+        self.green_team_players[self.current_green_index]["equipment_id"] = green_equipment_id
+        self.udp.sendEquipmentId(green_equipment_id)
+
+        self.current_green_index += 1
