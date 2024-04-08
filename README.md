@@ -14,6 +14,7 @@ tkinter
 supabase
 dotenv
 pillow
+playsound
 
 Run with python 3.12
 Splash screen and Player entry screen will run from the command "python3 main.py"
