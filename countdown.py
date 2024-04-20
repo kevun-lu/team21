@@ -1,6 +1,7 @@
 import tkinter as tk
 import threading
 import time
+import random
 from PIL import Image, ImageTk
 from playsound import playsound
 
@@ -8,7 +9,24 @@ def countdown_start():
     def update_countdown():
         nonlocal countdown_value
         if(countdown_value == 15):
-            threading.Thread(target=playsound, args=("Track01.mp3",), daemon=True).start()
+            num = random.randrange(4)
+            match num:
+                case 0:
+                    threading.Thread(target=playsound, args=("Track01.mp3",), daemon=True).start()
+                    print("Track 1")
+                case 1:
+                    threading.Thread(target=playsound, args=("Track02.mp3",), daemon=True).start()
+                    print("Track 2")
+                case 2:
+                    threading.Thread(target=playsound, args=("Track03.mp3",), daemon=True).start()
+                    print("Track 3")
+                case 3:
+                    threading.Thread(target=playsound, args=("Track04.mp3",), daemon=True).start()
+                    print("Track 4")
+                case 4:
+                    threading.Thread(target=playsound, args=("Track05.mp3",), daemon=True).start()
+                    print("Track 5")
+
         if countdown_value > 0:
             # Update label with the current countdown value
             label.config(text=str(countdown_value))
@@ -27,7 +45,7 @@ def countdown_start():
     root.attributes("-fullscreen", True)
 
     # Initialize countdown value
-    countdown_value = 30
+    countdown_value = 1
 
     # Use a label to display countdown
     label = tk.Label(root, text="", font=("Helvetica", 90), fg='orange', bg='black')
