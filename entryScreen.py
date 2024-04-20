@@ -111,6 +111,8 @@ class Entry_Screen():
             red_equipment_id_input.place(x = 550, y=100 + 40 * (i - 1))
             self.red_equipment_id_list.append(red_equipment_id_input)
 
+            self.red_team_players.append({"id": None, "codename": None, "equipment_id": None})
+
         # Create green ID inputs
         self.green_id_box_list = []
         self.green_codename_box_list = []
@@ -142,6 +144,8 @@ class Entry_Screen():
             )
             green_equipment_id_input.place(x=960, y=100 + 40 * (i - 1))
             self.green_equipment_id_list.append(green_equipment_id_input)
+
+            self.green_team_players.append({"id": None, "codename": None, "equipment_id": None})
 
         # Create start button
         self.start_button = Button(
@@ -209,8 +213,9 @@ class Entry_Screen():
             self.red_equipment_id_list[i].delete("1.0", END)
         for i in range(len(self.green_equipment_id_list)):
             self.green_equipment_id_list[i].delete("1.0", END)
-        self.red_team_players = []
-        self.green_team_players = []
+        for i in range(len(self.red_team_players)):
+            self.red_team_players[i] = {"id": None, "codename": None, "equipment_id": None}
+            self.green_team_players[i] = {"id": None, "codename": None, "equipment_id": None}
         self.current_red_index = 0
         self.current_green_index = 0
 
@@ -222,18 +227,20 @@ class Entry_Screen():
     def search_id_red(self):
         print("Search")
         color = 1 #red=1 green=2
-        red_id_input = self.red_id_box_list[self.current_red_index]
-        red_data = int(red_id_input.get("1.0", "end").strip())
-        self.red_team_players.append({"id": red_data, "codename": "", "equipment_id": None})
+        for i in range(len(self.red_id_box_list)):
+            id = self.red_id_box_list[i].get("1.0", "end").strip()
+            if id != '':
+                id = int(id)
+                self.red_team_players[i] = {"id": id, "codename": None, "equipment_id": None}
+                data, count = self.supabase.table('players').select('*').eq('id', id).execute()
+
         
-        data, count = self.supabase.table('players').select('*').eq('id', red_data).execute()
-        
-        if(data[1] != []):
-            print(data[1][0]["codename"])
-            self.red_team_players[self.current_red_index]["codename"] = data[1][0]["codename"]
-        else:
-            print("you need to add a codename")
-            self.red_team_players[self.current_red_index]["codename"] = "need new codename"
+                if(data[1] != []):
+                    print(data[1][0]["codename"])
+                    self.red_team_players[i]["codename"] = data[1][0]["codename"]
+                else:
+                    print("you need to add a codename")
+                    self.red_team_players[i]["codename"] = "need new codename"
 
         self.display_codename(color)
     
@@ -241,18 +248,18 @@ class Entry_Screen():
     def search_id_green(self):
         print("Search_green")
         color = 2 #red=1 green=2
-        green_id_input = self.green_id_box_list[self.current_green_index]
-        green_data = int(green_id_input.get("1.0", "end").strip())
-        self.green_team_players.append({"id": green_data, "codename": "", "equipment_id": None})
-        
-        data, count = self.supabase.table('players').select('*').eq('id', green_data).execute()
-        
-        if(data[1] != []):
-            print(data[1][0]["codename"])
-            self.green_team_players[self.current_green_index]["codename"] = data[1][0]["codename"]
-        else:
-            print("you need to add a codename")
-            self.green_team_players[self.current_green_index]["codename"] = "need new codename"
+        for i in range(len(self.green_id_box_list)):
+            id = self.green_id_box_list[i].get("1.0", "end").strip()
+            if id != '':
+                id = int(id)
+                self.green_team_players[i] = {"id": id, "codename": None, "equipment_id": None}
+                data, count = self.supabase.table('players').select('*').eq('id', id).execute()
+                if(data[1] != []):
+                    print(data[1][0]["codename"])
+                    self.green_team_players[i]["codename"] = data[1][0]["codename"]
+                else:
+                    print("you need to add a codename")
+                    self.green_team_players[i]["codename"] = "need new codename"
 
         self.display_codename(color)
 
@@ -260,49 +267,51 @@ class Entry_Screen():
         if color == 1:
             #red
             for i in range(len(self.red_team_players)):
-                self.red_codename_box_list[i].delete("1.0", END)
-                self.red_codename_box_list[i].insert("1.0",self.red_team_players[i]["codename"])
+                if self.red_team_players[i]["id"]:
+                    self.red_codename_box_list[i].delete("1.0", END)
+                    self.red_codename_box_list[i].insert("1.0",self.red_team_players[i]["codename"])
         else:
             #green
             for i in range(len(self.green_team_players)):
-                self.green_codename_box_list[i].delete("1.0", END)
-                self.green_codename_box_list[i].insert("1.0",self.green_team_players[i]["codename"])
-        
+                if self.green_team_players[i]["id"]:
+                    self.green_codename_box_list[i].delete("1.0", END)
+                    self.green_codename_box_list[i].insert("1.0",self.green_team_players[i]["codename"])
+            
 
     def update_codename_red(self):
         print("Update")
-        
-        if self.red_team_players[self.current_red_index]["codename"] == "need new codename":
-            red_codename_input = self.red_codename_box_list[self.current_red_index]
-            red_codename = red_codename_input.get("1.0", "end").strip()
-            self.red_team_players[self.current_red_index]["codename"] = red_codename
+        for i in range(len(self.red_codename_box_list)):
+            if self.red_team_players[i]["codename"] == "need new codename":
+                codename = self.red_codename_box_list[i].get("1.0", "end").strip()
+                self.red_team_players[i]["codename"] = codename
 
-            self.supabase.table('players').insert({"id": self.red_team_players[self.current_red_index]["id"], "codename": red_codename}).execute()
+                self.supabase.table('players').insert({"id": self.red_team_players[i]["id"], "codename": codename}).execute()
 
         
     
     def update_codename_green(self):
         print("Update")
+        for i in range(len(self.green_codename_box_list)):
+            if self.green_team_players[i]["codename"] == "need new codename":
+                codename = self.green_codename_box_list[i].get("1.0", "end").strip()
+                self.green_team_players[i]["codename"] = codename
+
+                self.supabase.table('players').insert({"id": self.green_team_players[i]["id"], "codename": codename}).execute()
         
-        if self.green_team_players[self.current_green_index]["codename"] == "need new codename":
-            green_codename_input = self.green_codename_box_list[self.current_green_index]
-            green_codename = green_codename_input.get("1.0", "end").strip()
-            self.green_team_players[self.current_green_index]["codename"] = green_codename
-
-            self.supabase.table('players').insert({"id": self.green_team_players[self.current_green_index]["id"], "codename": green_codename}).execute()
-
         
 
     def read_equipment_id_red(self):
-        red_equipment_id = self.red_equipment_id_list[self.current_red_index].get("1.0", "end").strip()
-        self.red_team_players[self.current_red_index]["equipment_id"] = red_equipment_id
-        self.udp.sendEquipmentId(red_equipment_id)
+        for i in range(len(self.red_codename_box_list)):
+            if self.red_team_players[i]["id"]:
+                equipment_id = self.red_equipment_id_list[i].get("1.0", "end").strip()
+                self.red_team_players[i]["equipment_id"] = equipment_id
+                self.udp.sendEquipmentId(equipment_id)
 
-        self.current_red_index += 1
+    
 
     def read_equipment_id_green(self):
-        green_equipment_id = self.green_equipment_id_list[self.current_green_index].get("1.0", "end").strip()
-        self.green_team_players[self.current_green_index]["equipment_id"] = green_equipment_id
-        self.udp.sendEquipmentId(green_equipment_id)
-
-        self.current_green_index += 1
+        for i in range(len(self.green_codename_box_list)):
+            if self.green_team_players[i]["id"]:
+                equipment_id = self.green_equipment_id_list[i].get("1.0", "end").strip()
+                self.green_team_players[i]["equipment_id"] = equipment_id
+                self.udp.sendEquipmentId(equipment_id)
