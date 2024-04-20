@@ -41,7 +41,7 @@ class Entry_Screen():
         self.red_background = Label(
             self.window,
             background=RED,
-            width=45,
+            width=58,
             height=45
         )
         self.red_background.place(x=200, y=50)
@@ -50,7 +50,7 @@ class Entry_Screen():
         self.green_background = Label(
             self.window,
             background=GREEN,
-            width=45,
+            width=58,
             height=45
         )
         self.green_background.place(x=610, y=50)
