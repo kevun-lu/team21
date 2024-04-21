@@ -3,58 +3,60 @@ import tkinter as tk
 
 # Default colors and sizes
 BLACK = "#000000"
-GREEN = "#005500"
-RED = "#550000"
+BLUE = "#ADD8E6"
+GREEN = "#00AA00"
+ORANGE = "#AA5500"
+RED = "#AA0000"
 WHITE = "#FFFFFF"
-FONT_SIZE = "20"
+YELLOW = "#EEEED0"
+FONT_SIZE = "35"
+FONT_SIZE2 = "helvetica 16 bold"
 ID_LABEL_WIDTH = 15
 ID_LABEL_HEIGHT = 1
-UDP_ID_WIDTH = 5
-UDP_ID_HEIGHT = 1
 BUTTON_WIDTH = 10
 BUTTON_HEIGHT = 4
 
-
-
-
-class Entry_Screen():
-    def __init__(self, supabase, udp):
-        self.red_team_players = []
-        self.green_team_players = []
+class Play_Action_Display():
+    def __init__(self, supabase, red_players, green_players):
+        self.red_team_players = red_players
+        self.green_team_players = green_players
         self.supabase = supabase
-        self.udp = udp
         self.current_red_index = 0
         self.current_green_index = 0
+        self.red_players_label_list = []
+        self.green_players_label_list = []
+        self.red_scores_list = []
+        self.green_scores_list = []
 
         self.make_boxes()
 
     def make_boxes(self):
         # Creates tk object for window
         self.window = Tk()
-        self.window.title("Player Entry Screen")
+        self.window.title("Play Action Display")
         # Set window size
         self.window.geometry("1200x800")
         # Set window color
         self.window.configure(background=BLACK)
 
-        # Create red background
-        self.red_background = Label(
+        # Create top half display background
+        self.display_top_background = Label(
             self.window,
-            background=RED,
-            width=58,
-            height=45
+            background=WHITE,
+            font=FONT_SIZE,
+            width=100,
+            height=25
         )
-        self.red_background.place(x=200, y=50)
-
-        # Create green background
-        self.green_background = Label(
+        self.display_top_background.place(x=45, y=60)
+        # Create bottom half display background
+        self.display_bot_background = Label(
             self.window,
-            background=GREEN,
-            width=58,
-            height=45
+            background=BLUE,
+            font=FONT_SIZE,
+            width=100,
+            height=14
         )
-        self.green_background.place(x=610, y=50)
-
+        self.display_bot_background.place(x=45, y=340)
         # Create red team header
         self.red_team_label = Label(
             self.window,
@@ -65,8 +67,17 @@ class Entry_Screen():
             width=20,
             height=1
         )
-        self.red_team_label.place(x=315, y=60)
-
+        self.red_team_label.place(x=50, y=90)
+        self.red_team_score_label = Label(
+            self.window,
+            text="0",
+            background=WHITE,
+            foreground=RED,
+            font=FONT_SIZE,
+            width=20,
+            height=1
+        )
+        self.red_team_score_label.place(x=250,y=90)
         # Create green team header
         self.green_team_label = Label(
             self.window,
@@ -77,241 +88,175 @@ class Entry_Screen():
             width=20,
             height=1
         )
-        self.green_team_label.place(x=715, y=60)
-
-        # Create red ID inputs
-        self.red_id_box_list = []
-        self.red_codename_box_list = []
-        self.red_equipment_id_list = []
-        for i in range(1, 16):
-            red_id_input = Text(
-                self.window,
-                font=FONT_SIZE,
-                width=ID_LABEL_WIDTH,
-                height=ID_LABEL_HEIGHT
-            )
-            red_id_input.place(x=210, y=100 + 40 * (i - 1))
-            self.red_id_box_list.append(red_id_input)
-
-            red_codename_input = Text(
-                self.window,
-                font=FONT_SIZE,
-                width=ID_LABEL_WIDTH,
-                height=ID_LABEL_HEIGHT
-            )
-            red_codename_input.place(x=380, y=100 + 40 * (i - 1))
-            self.red_codename_box_list.append(red_codename_input)
-
-            red_equipment_id_input = Text(
-                self.window,
-                font=FONT_SIZE,
-                width=UDP_ID_WIDTH,
-                height=UDP_ID_HEIGHT
-            )
-            red_equipment_id_input.place(x = 550, y=100 + 40 * (i - 1))
-            self.red_equipment_id_list.append(red_equipment_id_input)
-
-            self.red_team_players.append({"id": None, "codename": None, "equipment_id": None})
-
-        # Create green ID inputs
-        self.green_id_box_list = []
-        self.green_codename_box_list = []
-        self.green_equipment_id_list = []
-        for i in range(1, 16):
-            green_id_input = Text(
-                self.window,
-                font=FONT_SIZE,
-                width=ID_LABEL_WIDTH,
-                height=ID_LABEL_HEIGHT
-            )
-            green_id_input.place(x=620, y=100 + 40 * (i - 1))
-            self.green_id_box_list.append(green_id_input)
-
-            green_codename_input = Text(
-                self.window,
-                font=FONT_SIZE,
-                width=ID_LABEL_WIDTH,
-                height=ID_LABEL_HEIGHT
-            )
-            green_codename_input.place(x=790, y=100 + 40 * (i - 1))
-            self.green_codename_box_list.append(green_codename_input)
-
-            green_equipment_id_input = Text(
-                self.window,
-                font=FONT_SIZE,
-                width=UDP_ID_WIDTH,
-                height=UDP_ID_HEIGHT
-            )
-            green_equipment_id_input.place(x=960, y=100 + 40 * (i - 1))
-            self.green_equipment_id_list.append(green_equipment_id_input)
-
-            self.green_team_players.append({"id": None, "codename": None, "equipment_id": None})
-
-        # Create start button
-        self.start_button = Button(
+        self.green_team_label.place(x=550, y=90)
+        self.green_team_score_label = Label(
             self.window,
-            text="Start\n",
+            text="0",
             background=WHITE,
             foreground=GREEN,
             font=FONT_SIZE,
-            width=BUTTON_WIDTH,
-            height=BUTTON_HEIGHT,
-            command=self.start
+            width=20,
+            height=1
         )
-        self.start_button.place(x=0, y=690)
-
-
-        # Create clear all entries button
-        self.clear_button = Button(
+        self.green_team_score_label.place(x=750,y=90)
+        # Create current scores label
+        self.scores_label = Label(
+            text="CURRENT SCORE",
+            foreground=ORANGE,
+            background=YELLOW,
+            font=FONT_SIZE2,
+            width=30,
+            height=2
+        )
+        self.scores_label.place(x=800,y=30)
+        # Create current scores label
+        self.action_label = Label(
             self.window,
-            text="Clear\nall entries",
-            background=WHITE,
-            foreground=GREEN,
-            font=FONT_SIZE,
-            width=BUTTON_WIDTH,
-            height=BUTTON_HEIGHT,
-            command=self.clear_all_entries
+            text="CURRENT GAME ACTION",
+            foreground=ORANGE,
+            background=YELLOW,
+            font=FONT_SIZE2,
+            width=30,
+            height=2
         )
-        self.clear_button.place(x=1080, y=690)  
+        self.action_label.place(x=800,y=320)
+
+        # Create countdown timer
+        self.timer_label = Label(
+            self.window,
+            text="TIME LEFT:",
+            foreground=ORANGE,
+            background=YELLOW,
+            font=FONT_SIZE2,
+            width=20,
+            height=2
+        )
+        self.timer_label.place(x=800,y=630)
+        # Create countdown timer
+        self.countdown_label = Label(
+            self.window,
+            text="360",
+            foreground=ORANGE,
+            background=YELLOW,
+            font=FONT_SIZE2,
+            width=15,
+            height=2
+        )
+        self.countdown_label.place(x=1000,y=630)
+
+        for i in range(len(self.red_team_players)):
+            if self.red_team_players[i]["codename"] == None:
+                break
+            self.red_player_label = Label(
+                self.window,
+                text=self.red_team_players[i]["codename"],
+                background=WHITE,
+                foreground=RED,
+                font=FONT_SIZE,
+                width=20,
+                height=1
+            )
+            self.red_player_label.place(x=50,y=120+i*30)
+            self.red_players_label_list.append(self.red_player_label)
+            self.red_player_score_label = Label(
+                self.window,
+                text="0",
+                background=WHITE,
+                foreground=RED,
+                font=FONT_SIZE,
+                width=20,
+                height=1
+            )
+            self.red_player_score_label.place(x=250,y=120+i*30)
+            self.red_scores_list.append(self.red_player_score_label)
+
+        for i in range(len(self.green_team_players)):
+            if self.green_team_players[i]["codename"] == None:
+                break
+            self.green_player_label = Label(
+                self.window,
+                text=self.green_team_players[i]["codename"],
+                background=WHITE,
+                foreground=GREEN,
+                font=FONT_SIZE,
+                width=20,
+                height=1
+            )
+            self.green_player_label.place(x=550,y=120+i*30)
+            self.green_players_label_list.append(self.green_player_label)
+            self.green_player_score_label = Label(
+                self.window,
+                text="0",
+                background=WHITE,
+                foreground=GREEN,
+                font=FONT_SIZE,
+                width=20,
+                height=1
+            )
+            self.green_player_score_label.place(x=750,y=120+i*30)
+            self.red_scores_list.append(self.red_player_score_label)
+
+        self.game_action_text_label = Label(
+                self.window,
+                text="ADD HERE",
+                background=BLUE,
+                foreground=ORANGE,
+                font=FONT_SIZE,
+                width=20,
+                height=5
+        )
+        self.game_action_text_label.place(x=50,y=340)
+
+        def countdown(count):
+            self.countdown_label["text"] = count
+            if count > 0:
+               self.window.after(1000, countdown, count - 1) 
+
+        def update_player_score(player, points):
+            placement = 1
+            swap_player_positions(player, placement)
+            print()
+
+        def update_team_score(team, points):
+            if team == "red":
+                self.red_team_score_label["text"] += points
+            else:
+                self.green_team_score_label["text"] += points
+
+        def hit_base(player):
+            points = 0
+            for i in range(len(self.red_team_players)):
+                if(player == self.red_team_players[i]["id"]):
+                    update_player_score(points)
+                    update_team_score(points)
+        
+        def hit_player(player):
+            points = 0
+            for i in range(len(self.red_team_players)):
+                if(player == self.red_team_players[i]["id"]):
+                    update_player_score(points)
+                    update_team_score(points)
+
+        def swap_player_positions(player, placement):
+            #if player gains points
+            if(placement):
+                #if player is on red team
+                for i in range(len(self.red_team_players)):
+                    if(player == self.red_team_players[i]["id"]):
+                        #if player is not in top position and has greater score than player above, swap positions
+                        if(self.red_scores_list[i].cget("text") != 120 & self.red_scores_list[i].cget("text") > self.red_scores_list[i + 1].cget("text")):
+                            #change positions in red team players
+                            player_change = self.red_team_players[i]
+                            self.red_team_players[i] = self.red_team_players[i + 1]
+                            self.red_team_players[i + 1] = player_change
+                            #change positions in red scores list and change label positions
+                            score_change = self.red_scores_list[i]
+                            score_change_position1 = self.red_player_score_label[i].place_info()
+                            score_change_position1 = self.red_player_score_label[i].place_info()
 
 
-        #Search ID on database for red team
-        search_button = Button(self.window, text="Search", command=self.search_id_red)
-        search_button.place(x=275, y=700)
-        #Update codename for red team
-        update_button = Button(self.window, text="Update", command=self.update_codename_red)
-        update_button.place(x=440, y =700)
-        #Read equipment id for red team
-        read_button = Button(self.window, text="OK", command=self.read_equipment_id_red)
-        read_button.place(x=550, y =700)
-        #Search ID on database for green team
-        search_button = Button(self.window, text="Search", command=self.search_id_green)
-        search_button.place(x=685, y=700)
-        #Update codename for green team
-        update_button = Button(self.window, text="Update", command=self.update_codename_green)
-        update_button.place(x=850, y =700)
-        #Read equipment id for green team
-        read_button = Button(self.window, text="OK", command=self.read_equipment_id_green)
-        read_button.place(x=960, y =700)
 
+        countdown(360)
 
         # Shows window
         self.window.mainloop()
-
-
-        # Create clear all entries button functionality
-    def clear_all_entries(self):
-        for i in range(len(self.red_id_box_list)):
-            self.red_id_box_list[i].delete("1.0", END)
-        for i in range(len(self.green_id_box_list)):
-            self.green_id_box_list[i].delete("1.0", END)
-        for i in range(len(self.red_codename_box_list)):
-            self.red_codename_box_list[i].delete("1.0", END)
-        for i in range(len(self.green_codename_box_list)):
-            self.green_codename_box_list[i].delete("1.0", END)
-        for i in range(len(self.red_equipment_id_list)):
-            self.red_equipment_id_list[i].delete("1.0", END)
-        for i in range(len(self.green_equipment_id_list)):
-            self.green_equipment_id_list[i].delete("1.0", END)
-        for i in range(len(self.red_team_players)):
-            self.red_team_players[i] = {"id": None, "codename": None, "equipment_id": None}
-            self.green_team_players[i] = {"id": None, "codename": None, "equipment_id": None}
-        self.current_red_index = 0
-        self.current_green_index = 0
-
-        
-    # Create start button functionality
-    def start(self):
-        self.window.destroy()
-
-    def search_id_red(self):
-        print("Search")
-        color = 1 #red=1 green=2
-        for i in range(len(self.red_id_box_list)):
-            id = self.red_id_box_list[i].get("1.0", "end").strip()
-            if id != '':
-                id = int(id)
-                self.red_team_players[i] = {"id": id, "codename": None, "equipment_id": None}
-                data, count = self.supabase.table('players').select('*').eq('id', id).execute()
-
-        
-                if(data[1] != []):
-                    print(data[1][0]["codename"])
-                    self.red_team_players[i]["codename"] = data[1][0]["codename"]
-                else:
-                    print("you need to add a codename")
-                    self.red_team_players[i]["codename"] = "need new codename"
-
-        self.display_codename(color)
-    
-    #Green team  
-    def search_id_green(self):
-        print("Search_green")
-        color = 2 #red=1 green=2
-        for i in range(len(self.green_id_box_list)):
-            id = self.green_id_box_list[i].get("1.0", "end").strip()
-            if id != '':
-                id = int(id)
-                self.green_team_players[i] = {"id": id, "codename": None, "equipment_id": None}
-                data, count = self.supabase.table('players').select('*').eq('id', id).execute()
-                if(data[1] != []):
-                    print(data[1][0]["codename"])
-                    self.green_team_players[i]["codename"] = data[1][0]["codename"]
-                else:
-                    print("you need to add a codename")
-                    self.green_team_players[i]["codename"] = "need new codename"
-
-        self.display_codename(color)
-
-    def display_codename(self, color):
-        if color == 1:
-            #red
-            for i in range(len(self.red_team_players)):
-                if self.red_team_players[i]["id"]:
-                    self.red_codename_box_list[i].delete("1.0", END)
-                    self.red_codename_box_list[i].insert("1.0",self.red_team_players[i]["codename"])
-        else:
-            #green
-            for i in range(len(self.green_team_players)):
-                if self.green_team_players[i]["id"]:
-                    self.green_codename_box_list[i].delete("1.0", END)
-                    self.green_codename_box_list[i].insert("1.0",self.green_team_players[i]["codename"])
-            
-
-    def update_codename_red(self):
-        print("Update")
-        for i in range(len(self.red_codename_box_list)):
-            if self.red_team_players[i]["codename"] == "need new codename":
-                codename = self.red_codename_box_list[i].get("1.0", "end").strip()
-                self.red_team_players[i]["codename"] = codename
-
-                self.supabase.table('players').insert({"id": self.red_team_players[i]["id"], "codename": codename}).execute()
-
-        
-    
-    def update_codename_green(self):
-        print("Update")
-        for i in range(len(self.green_codename_box_list)):
-            if self.green_team_players[i]["codename"] == "need new codename":
-                codename = self.green_codename_box_list[i].get("1.0", "end").strip()
-                self.green_team_players[i]["codename"] = codename
-
-                self.supabase.table('players').insert({"id": self.green_team_players[i]["id"], "codename": codename}).execute()
-        
-        
-
-    def read_equipment_id_red(self):
-        for i in range(len(self.red_codename_box_list)):
-            if self.red_team_players[i]["id"]:
-                equipment_id = self.red_equipment_id_list[i].get("1.0", "end").strip()
-                self.red_team_players[i]["equipment_id"] = equipment_id
-                self.udp.sendEquipmentId(equipment_id)
-
-    
-
-    def read_equipment_id_green(self):
-        for i in range(len(self.green_codename_box_list)):
-            if self.green_team_players[i]["id"]:
-                equipment_id = self.green_equipment_id_list[i].get("1.0", "end").strip()
-                self.green_team_players[i]["equipment_id"] = equipment_id
-                self.udp.sendEquipmentId(equipment_id)
