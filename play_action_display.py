@@ -21,6 +21,10 @@ class Play_Action_Display():
     def __init__(self, supabase, red_players, green_players):
         self.red_team_players = red_players
         self.green_team_players = green_players
+        for i in range(len(self.red_team_players)):
+            self.red_team_players[i]["hit_enemy_base"] = False
+        for i in range(len(self.green_team_players)):
+            self.green_team_players[i]["hit_enemy_base"] = False
         self.supabase = supabase
         self.current_red_index = 0
         self.current_green_index = 0
@@ -217,6 +221,16 @@ class Play_Action_Display():
             if count > 0:
                self.window.after(1000, countdown, count - 1) 
 
+        def receive_player_action(player, object):
+            if player == object:
+                hit_self(player)
+            elif object == 53:
+                hit_red_base(player)
+            elif object == 43:
+                hit_green_base(player)
+            else:
+                hit_player(player, object)
+
         def update_player_score(player, team, points):
             for i in range(len(self.red_team_players)):
                 if(player == self.red_team_players[i]["id"]):
@@ -235,19 +249,38 @@ class Play_Action_Display():
             else:
                 self.green_team_score_label["text"] += points
 
-        def hit_base(player):
-            points = 0
+        def hit_red_base(player):
+            for i in range(len(self.green_team_players)):
+                if(player == self.green_team_players[i]["id"]):
+                    if self.green_team_players[i]["hit_enemy_base"] == False:
+                        update_player_score(player, "green", 100)
+                        self.green_team_players[i]["hit_enemy_base"] = True
+                        
+        def hit_green_base(player):
             for i in range(len(self.red_team_players)):
                 if(player == self.red_team_players[i]["id"]):
-                    update_player_score(points)
-                    update_team_score(points)
-        
-        def hit_player(player):
-            points = 0
+                    if self.red_team_players[i]["hit_enemy_base"] == False:
+                        update_player_score(player, "red", 100)
+                        self.red_team_players[i]["hit_enemy_base"] = True
+
+        def hit_player(player, object):
             for i in range(len(self.red_team_players)):
                 if(player == self.red_team_players[i]["id"]):
-                    update_player_score(points)
-                    update_team_score(points)
+                    player_team = "red"
+                else: 
+                    player_team = "green"
+            for i in range(len(self.red_team_players)):
+                if(object == self.red_team_players[i]["id"]):
+                    object_team = "red"
+                else:
+                    object_team = "green"
+            if player_team != object_team:
+                update_player_score(player, player_team, 10)
+            else:
+                update_player_score(player, player_team, -10)
+
+        def hit_self(player):
+            pass
 
         def swap_player_positions(player, team, placement):
             #if player gains points
