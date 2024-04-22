@@ -52,8 +52,7 @@ class Udp:
                 self.play_action.receive_player_action(data[0],data[2]) 
             except socket.timeout:
                 data = None
-            finally:
-                self.__receiveSocket.close()
+                #self.__receiveSocket.close()
               
             
         
@@ -62,6 +61,7 @@ class Udp:
         #time.sleep(10) #simulating a 10-second countdown timer
         self.sendData("202", self.sendPort)
         print("Game start code (202) sent.")
+        self.receiveData()
 
     def sendGameEndCode(self):
         for _ in range(3): #Send code 221 three times

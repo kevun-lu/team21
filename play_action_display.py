@@ -37,7 +37,6 @@ class Play_Action_Display():
             self.red_team_players[i]["hit_enemy_base"] = False
         for i in range(len(self.green_team_players)):
             self.green_team_players[i]["hit_enemy_base"] = False
-        self.udp.sendGameStartCode()
         self.make_boxes()
 
     def make_boxes(self):
@@ -404,9 +403,5 @@ class Play_Action_Display():
  
         update_player_score(1, "green", 20)
 
-        thread = Thread(target = self.udp.receiveData())
-        thread2 = Thread(target = self.window.mainloop())
-        thread.start()
-        thread2.start()
-        thread.join()
+        self.window.mainloop()
         

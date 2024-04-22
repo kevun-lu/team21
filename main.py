@@ -12,6 +12,7 @@ from trafficgenerator import tg
 
 import os
 from supabase import create_client, Client
+from threading import Thread
 
 #testing push
 
@@ -27,7 +28,14 @@ udp = Udp(play_action_display)
 splash_screen()
 entry_screen = Entry_Screen(supabase, udp)
 countdown_start()
-play_action_display.start(entry_screen.red_team_players, entry_screen.green_team_players, udp)
+thread2 = Thread(target = play_action_display.start, args = (entry_screen.red_team_players, entry_screen.green_team_players, udp))
+thread2.start()
+thread = Thread(target = udp.sendGameStartCode)
+thread.start()
+thread3 = Thread(target = tg, args = (1, 2, 3, 4))
+thread3.start()
+thread.join()
+# play_action_display.start(entry_screen.red_team_players, entry_screen.green_team_players, udp)
 
 
 # Starts up the udp server
