@@ -223,7 +223,7 @@ class Entry_Screen():
     # Create start button functionality
     def start(self):
         self.window.destroy()
-
+        
     def search_id_red(self):
         print("Search")
         color = 1 #red=1 green=2
