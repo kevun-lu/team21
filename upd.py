@@ -8,13 +8,13 @@ bufferSize = 1024
 
 class Udp:
 
-    def __init__(self,):
+    def __init__(self, play_action):
+        self.play_action = play_action
         self.sendPort = 7500
         self.sendSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.receivePort = 7501
         self.__receiveSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.__receiveSocket.bind(('127.0.0.1',7501))
-        #self.play_action = play_action
 
     def sendData(self, data, port):
         sendSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -67,7 +67,3 @@ class Udp:
             self.sendData("221", self.sendPort)
             print("Game end code (221) sent.")
 
-UDPServer=Udp()
-time.sleep(10)
-UDPServer.sendGameStartCode()
-UDPServer.receiveData(7501)
