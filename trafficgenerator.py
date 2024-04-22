@@ -17,13 +17,10 @@ green1 = input('Enter equipment id of green player 1 ==> ')
 green2 = input('Enter equipment id of green player 2 ==> ')
 
 # Create datagram sockets
-print("yes")
 UDPServerSocketReceive = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-print("yes")
 UDPClientSocketTransmit = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
 # bind server socket
-print("yes")
 UDPServerSocketReceive.bind(serverAddressPort)
 
 # wait for start from game software
