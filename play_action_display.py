@@ -1,6 +1,7 @@
 from tkinter import *
 import tkinter as tk
 import time
+from threading import Thread
 
 # Default colors and sizes
 BLACK = "#000000"
@@ -28,13 +29,15 @@ class Play_Action_Display():
         self.max_red_index = 0
         self.max_green_index = 0
 
-    def start(self, red_players, green_players):
+    def start(self, red_players, green_players, udp):
+        self.udp = udp
         self.red_team_players = red_players
         self.green_team_players = green_players
         for i in range(len(self.red_team_players)):
             self.red_team_players[i]["hit_enemy_base"] = False
         for i in range(len(self.green_team_players)):
             self.green_team_players[i]["hit_enemy_base"] = False
+        self.udp.sendGameStartCode()
         self.make_boxes()
 
     def make_boxes(self):
@@ -401,6 +404,9 @@ class Play_Action_Display():
  
         update_player_score(1, "green", 20)
 
-
-        # Shows window
-        self.window.mainloop()
+        thread = Thread(target = self.udp.receiveData())
+        thread2 = Thread(target = self.window.mainloop())
+        thread.start()
+        thread2.start()
+        thread.join()
+        

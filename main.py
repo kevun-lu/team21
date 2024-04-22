@@ -7,7 +7,8 @@ from splash_screen import splash_screen
 from entryScreen import Entry_Screen
 from countdown import countdown_start
 from play_action_display import Play_Action_Display
-from updKL import Udp
+from upd import Udp
+from trafficgenerator import tg
 
 import os
 from supabase import create_client, Client
@@ -26,7 +27,7 @@ udp = Udp(play_action_display)
 splash_screen()
 entry_screen = Entry_Screen(supabase, udp)
 countdown_start()
-play_action_display.start(entry_screen.red_team_players, entry_screen.green_team_players)
+play_action_display.start(entry_screen.red_team_players, entry_screen.green_team_players, udp)
 
 
 # Starts up the udp server

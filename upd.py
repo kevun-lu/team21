@@ -40,20 +40,21 @@ class Udp:
     #     else: 
     #         print("Invalid format received.")
     
-    def receiveData(self, port):
+    def receiveData(self):
         while True:
             print("hope")
             #receiveSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             self.__receiveSocket.settimeout(5)
             try:
                 data, _ = self.__receiveSocket.recvfrom(1024)
+                data = data.decode()
+                data = data.partition(':')
+                self.play_action.receive_player_action(data[0],data[2]) 
             except socket.timeout:
                 data = None
             finally:
                 self.__receiveSocket.close()
-            data = data.decode()
-            data = data.partition(':')
-            self.play_action.receive_player_action(data[0],data[2])   
+              
             
         
 
