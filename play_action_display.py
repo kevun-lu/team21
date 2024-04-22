@@ -18,14 +18,7 @@ BUTTON_WIDTH = 10
 BUTTON_HEIGHT = 4
 
 class Play_Action_Display():
-    def __init__(self, supabase, red_players, green_players):
-        self.red_team_players = red_players
-        self.green_team_players = green_players
-        for i in range(len(self.red_team_players)):
-            self.red_team_players[i]["hit_enemy_base"] = False
-        for i in range(len(self.green_team_players)):
-            self.green_team_players[i]["hit_enemy_base"] = False
-        self.supabase = supabase
+    def __init__(self):
         self.current_red_index = 0
         self.current_green_index = 0
         self.red_players_label_list = []
@@ -35,6 +28,13 @@ class Play_Action_Display():
         self.max_red_index = 0
         self.max_green_index = 0
 
+    def start(self, red_players, green_players):
+        self.red_team_players = red_players
+        self.green_team_players = green_players
+        for i in range(len(self.red_team_players)):
+            self.red_team_players[i]["hit_enemy_base"] = False
+        for i in range(len(self.green_team_players)):
+            self.green_team_players[i]["hit_enemy_base"] = False
         self.make_boxes()
 
     def make_boxes(self):
@@ -392,14 +392,15 @@ class Play_Action_Display():
 
 
         countdown(360)
+        
         update_player_score(2, "red", 10)
-        time.sleep(5)
+
         update_player_score(1, "red", 20)
-        time.sleep(5)
+
         update_player_score(2, "green", 10)
-        time.sleep(5)
+ 
         update_player_score(1, "green", 20)
-        time.sleep(5)
+
 
         # Shows window
         self.window.mainloop()
