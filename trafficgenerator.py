@@ -53,9 +53,9 @@ def tg(red1, red2, green1, green2):
 			message = str(greenplayer) + ":" + str(redplayer)
 			
 		# after 10 iterations, send base hit
-		if counter == 10:
+		if counter%10 == 0:
 			message = str(redplayer) + ":43"
-		if counter == 20:
+		if counter%10 == 5:
 			message = str(greenplayer) + ":53"
 			
 		print("transmitting to game: " + message)

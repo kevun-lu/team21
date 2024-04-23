@@ -24,7 +24,6 @@ class Udp:
 
     def sendEquipmentId(self, equipmentId):
         self.__receiveSocket.sendto(str(equipmentId).encode(), (localIP, self.sendPort))
-        print(f"Showing equipment id: {equipmentId}.....")
 
     # def receiveEquipmentId(self):
     #     received = ''
@@ -42,14 +41,13 @@ class Udp:
     
     def receiveData(self):
         while True:
-            print("hope")
             #receiveSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             self.__receiveSocket.settimeout(5)
             try:
                 data, _ = self.__receiveSocket.recvfrom(1024)
                 data = data.decode()
                 data = data.partition(':')
-                self.play_action.receive_player_action(data[0],data[2]) 
+                self.play_action.receive_player_action(int(data[0]),int(data[2])) 
                 self.sendEquipmentId(data[2])
             except socket.timeout:
                 data = None

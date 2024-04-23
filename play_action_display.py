@@ -219,14 +219,6 @@ class Play_Action_Display():
         self.game_action_text_label.place(x=50,y=340)
 
         self.countdown(360)
-    
-        self.update_player_score(2, "red", 10)
-
-        self.update_player_score(1, "red", 20)
-
-        self.update_player_score(3, "green", 10)
-
-        self.update_player_score(4, "green", 20)
 
         self.window.mainloop()
 
@@ -246,24 +238,37 @@ class Play_Action_Display():
             self.hit_player(player, object)
 
     def update_player_score(self, player, team, points):
+        print(f"{player} {team} {points}")
         if(team == "red"):
             for i in range(self.max_red_index):
+                x = self.red_team_players[i]["id"]
+                print(f" max red index: {self.max_red_index}")
+                print(f" red player id: {x}")
                 if(player == self.red_team_players[i]["id"]):
+                    print("red player found")
                     change = int(self.red_scores_list[i]["text"])
+                    print(f'current red score = {change}')
                     change += points
+                    print(f'updated red score = {change}')
                     self.red_scores_list[i]["text"] = change
         else:
             for i in range(self.max_green_index):
+                x = self.green_team_players[i]["id"]
+                print(f" max green index: {self.max_green_index}")
+                print(f" green player id: {x}")
                 if(player == self.green_team_players[i]["id"]):
+                    print("green player found")
                     change = int(self.green_scores_list[i]["text"])
+                    print(f'current green score = {change}')
                     change += points
+                    print(f'updated green score = {change}')
                     self.green_scores_list[i]["text"] = change
         if points > 0:
             placement = 1
         else:
             placement = 0
         self.update_team_score(team, points)
-        self.swap_player_positions(player, team, placement)
+        #self.swap_player_positions(player, team, placement)
 
     def update_team_score(self, team, points):
         if team == "red":
@@ -293,11 +298,13 @@ class Play_Action_Display():
         for i in range(len(self.red_team_players)):
             if(player == self.red_team_players[i]["id"]):
                 player_team = "red"
+                break
             else: 
                 player_team = "green"
         for i in range(len(self.red_team_players)):
             if(object == self.red_team_players[i]["id"]):
                 object_team = "red"
+                break
             else:
                 object_team = "green"
         if player_team != object_team:
@@ -377,7 +384,6 @@ class Play_Action_Display():
                         #if player is not in bottom position and has lower score than player below, swap positions
                         if(int(current_position["y"]) != (120 + self.max_red_index * 30) & (int(self.red_scores_list[i].cget("text")) < int(self.red_scores_list[i + 1].cget("text")))):
                             #change positions in red team players
-                            print("PRINT 2")
                             player_change = self.red_team_players[i]
                             self.red_team_players[i] = self.red_team_players[i + 1]
                             self.red_team_players[i + 1] = player_change
