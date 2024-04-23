@@ -218,209 +218,211 @@ class Play_Action_Display():
         )
         self.game_action_text_label.place(x=50,y=340)
 
-        def countdown(count):
-            self.countdown_label["text"] = count
-            if count > 0:
-               self.window.after(1000, countdown, count - 1) 
+        self.countdown(360)
+    
+        self.update_player_score(2, "red", 10)
 
-        def receive_player_action(player, object):
-            if player == object:
-                hit_self(player)
-            elif object == 53:
-                hit_red_base(player)
-            elif object == 43:
-                hit_green_base(player)
+        self.update_player_score(1, "red", 20)
+
+        self.update_player_score(3, "green", 10)
+
+        self.update_player_score(4, "green", 20)
+
+        self.window.mainloop()
+
+    def countdown(self, count):
+        self.countdown_label["text"] = count
+        if count > 0:
+            self.window.after(1000, self.countdown, count - 1) 
+
+    def receive_player_action(self, player, object):
+        if player == object:
+            self.hit_self(player)
+        elif object == 53:
+            self.hit_red_base(player)
+        elif object == 43:
+            self.hit_green_base(player)
+        else:
+            self.hit_player(player, object)
+
+    def update_player_score(self, player, team, points):
+        if(team == "red"):
+            for i in range(self.max_red_index):
+                if(player == self.red_team_players[i]["id"]):
+                    change = int(self.red_scores_list[i]["text"])
+                    change += points
+                    self.red_scores_list[i]["text"] = change
+        else:
+            for i in range(self.max_green_index):
+                if(player == self.green_team_players[i]["id"]):
+                    change = int(self.green_scores_list[i]["text"])
+                    change += points
+                    self.green_scores_list[i]["text"] = change
+        if points > 0:
+            placement = 1
+        else:
+            placement = 0
+        self.update_team_score(team, points)
+        self.swap_player_positions(player, team, placement)
+
+    def update_team_score(self, team, points):
+        if team == "red":
+            change = int(self.red_team_score_label["text"])
+            change += points
+            self.red_team_score_label["text"] = change
+        else:
+            change = int(self.green_team_score_label["text"])
+            change += points
+            self.green_team_score_label["text"] = change
+
+    def hit_red_base(self, player):
+        for i in range(len(self.green_team_players)):
+            if(player == self.green_team_players[i]["id"]):
+                if self.green_team_players[i]["hit_enemy_base"] == False:
+                    self.update_player_score(player, "green", 100)
+                    self.green_team_players[i]["hit_enemy_base"] = True
+                    
+    def hit_green_base(self, player):
+        for i in range(len(self.red_team_players)):
+            if(player == self.red_team_players[i]["id"]):
+                if self.red_team_players[i]["hit_enemy_base"] == False:
+                    self.update_player_score(player, "red", 100)
+                    self.red_team_players[i]["hit_enemy_base"] = True
+
+    def hit_player(self, player, object):
+        for i in range(len(self.red_team_players)):
+            if(player == self.red_team_players[i]["id"]):
+                player_team = "red"
+            else: 
+                player_team = "green"
+        for i in range(len(self.red_team_players)):
+            if(object == self.red_team_players[i]["id"]):
+                object_team = "red"
             else:
-                hit_player(player, object)
+                object_team = "green"
+        if player_team != object_team:
+            self.update_player_score(player, player_team, 10)
+        else:
+            self.update_player_score(player, player_team, -10)
 
-        def update_player_score(player, team, points):
+    def hit_self(self, player):
+        pass
+
+    def update_game_action(self, player, team, target):
+        if(target == "base"):
+            self.action_label["text"] = player + " has hit " + team + "'s base"
+
+    def swap_player_positions(self, player, team, placement):
+        #if player gains points
+        if(placement):
+            #if player is on red team
             if(team == "red"):
                 for i in range(self.max_red_index):
                     if(player == self.red_team_players[i]["id"]):
-                        change = int(self.red_scores_list[i]["text"])
-                        change += points
-                        self.red_scores_list[i]["text"] = change
+                        current_position = self.red_players_label_list[i].place_info()
+                        #if player is not in top position and has greater score than player above, swap positions
+                        if(int(current_position["y"]) != 120 & (int(self.red_scores_list[i].cget("text")) > int(self.red_scores_list[i - 1].cget("text")))):
+                            #change positions in red team players
+                            player_change = self.red_team_players[i]
+                            self.red_team_players[i] = self.red_team_players[i - 1]
+                            self.red_team_players[i - 1] = player_change
+                            #change positions in red players labels list and change lable position
+                            label_change = self.red_players_label_list[i]
+                            label_change_position1 = self.red_players_label_list[i].place_info()
+                            label_change_position2 = self.red_players_label_list[i - 1].place_info()
+                            self.red_players_label_list[i].place(x=50,y=int(label_change_position2["y"]))
+                            self.red_players_label_list[i - 1].place(x=50,y=int(label_change_position1["y"]))
+                            self.red_players_label_list[i] = self.red_players_label_list[i - 1]
+                            self.red_players_label_list[i - 1] = label_change
+                            #change positions in red scores list and change label positions
+                            score_change = self.red_scores_list[i]
+                            score_change_position1 = self.red_scores_list[i].place_info()
+                            score_change_position2 = self.red_scores_list[i - 1].place_info()
+                            self.red_scores_list[i].place(x=250,y=int(score_change_position2["y"]))
+                            self.red_scores_list[i - 1].place(x=250,y=int(score_change_position1["y"]))
+                            self.red_scores_list[i] = self.red_scores_list[i - 1]
+                            self.red_scores_list[i - 1] = score_change
             else:
                 for i in range(self.max_green_index):
                     if(player == self.green_team_players[i]["id"]):
-                        change = int(self.green_scores_list[i]["text"])
-                        change += points
-                        self.green_scores_list[i]["text"] = change
-            if points > 0:
-                placement = 1
+                        current_position = self.green_players_label_list[i].place_info()
+                        #if player is not in top position and has greater score than player above, swap positions
+                        if(int(current_position["y"]) != 120 & (int(self.green_scores_list[i].cget("text")) > int(self.green_scores_list[i - 1].cget("text")))):
+                            #change positions in green team players
+                            player_change = self.green_team_players[i]
+                            self.green_team_players[i] = self.green_team_players[i - 1]
+                            self.green_team_players[i - 1] = player_change
+                            #change positions in green players labels list and change lable position
+                            label_change = self.green_players_label_list[i]
+                            label_change_position1 = self.green_players_label_list[i].place_info()
+                            label_change_position2 = self.green_players_label_list[i - 1].place_info()
+                            self.green_players_label_list[i].place(x=550,y=int(label_change_position2["y"]))
+                            self.green_players_label_list[i - 1].place(x=550,y=int(label_change_position1["y"]))
+                            self.green_players_label_list[i] = self.green_players_label_list[i - 1]
+                            self.green_players_label_list[i - 1] = label_change
+                            #change positions in green scores list and change label positions
+                            score_change = self.green_scores_list[i]
+                            score_change_position1 = self.green_scores_list[i].place_info()
+                            score_change_position2 = self.green_scores_list[i - 1].place_info()
+                            self.green_scores_list[i].place(x=750,y=int(score_change_position2["y"]))
+                            self.green_scores_list[i - 1].place(x=750,y=int(score_change_position1["y"]))
+                            self.green_scores_list[i] = self.green_scores_list[i - 1]
+                            self.green_scores_list[i - 1] = score_change
+        else:
+            #if player is on red team
+            if(team == "red"):
+                for i in range(self.max_red_index-1):
+                    if(player == self.red_team_players[i]["id"]):
+                        current_position = self.red_players_label_list[i].place_info()
+                        #if player is not in bottom position and has lower score than player below, swap positions
+                        if(int(current_position["y"]) != (120 + self.max_red_index * 30) & (int(self.red_scores_list[i].cget("text")) < int(self.red_scores_list[i + 1].cget("text")))):
+                            #change positions in red team players
+                            print("PRINT 2")
+                            player_change = self.red_team_players[i]
+                            self.red_team_players[i] = self.red_team_players[i + 1]
+                            self.red_team_players[i + 1] = player_change
+                            #change positions in red players labels list and change lable position
+                            label_change = self.red_players_label_list[i]
+                            label_change_position1 = self.red_players_label_list[i].place_info()
+                            label_change_position2 = self.red_players_label_list[i + 1].place_info()
+                            self.red_players_label_list[i].place(x=50,y=int(label_change_position2["y"]))
+                            self.red_players_label_list[i + 1].place(x=50,y=int(label_change_position1["y"]))
+                            self.red_players_label_list[i] = self.red_players_label_list[i + 1]
+                            self.red_players_label_list[i + 1] = label_change
+                            #change positions in red scores list and change label positions
+                            score_change = self.red_scores_list[i]
+                            score_change_position1 = self.red_scores_list[i].place_info()
+                            score_change_position2 = self.red_scores_list[i + 1].place_info()
+                            self.red_scores_list[i].place(x=250,y=int(score_change_position2["y"]))
+                            self.red_scores_list[i + 1].place(x=250,y=int(score_change_position1["y"]))
+                            self.red_scores_list[i] = self.red_scores_list[i + 1]
+                            self.red_scores_list[i + 1] = score_change
             else:
-                placement = 0
-            update_team_score(team, points)
-            swap_player_positions(player, team, placement)
+                for i in range(self.max_green_index-1):
+                    if(player == self.green_team_players[i]["id"]):
+                        current_position = self.green_players_label_list[i].place_info()
+                        #if player is not in bottom position and has lower score than player below, swap positions
+                        if(int(current_position["y"]) != (120 + self.max_green_index * 30) & (int(self.green_scores_list[i].cget("text")) < int(self.green_scores_list[i + 1].cget("text")))):
+                            #change positions in green team players
+                            player_change = self.green_team_players[i]
+                            self.green_team_players[i] = self.green_team_players[i + 1]
+                            self.green_team_players[i + 1] = player_change
+                            #change positions in green players labels list and change lable position
+                            label_change = self.green_players_label_list[i]
+                            label_change_position1 = self.green_players_label_list[i].place_info()
+                            label_change_position2 = self.green_players_label_list[i + 1].place_info()
+                            self.green_players_label_list[i].place(x=550,y=int(label_change_position2["y"]))
+                            self.green_players_label_list[i + 1].place(x=550,y=int(label_change_position1["y"]))
+                            self.green_players_label_list[i] = self.green_players_label_list[i + 1]
+                            self.green_players_label_list[i + 1] = label_change
+                            #change positions in green scores list and change label positions
+                            score_change = self.green_scores_list[i]
+                            score_change_position1 = self.green_scores_list[i].place_info()
+                            score_change_position2 = self.green_scores_list[i + 1].place_info()
+                            self.green_scores_list[i].place(x=750,y=int(score_change_position2["y"]))
+                            self.green_scores_list[i + 1].place(x=750,y=int(score_change_position1["y"]))
+                            self.green_scores_list[i] = self.green_scores_list[i + 1]
+                            self.green_scores_list[i + 1] = score_change
 
-        def update_team_score(team, points):
-            if team == "red":
-                change = int(self.red_team_score_label["text"])
-                change += points
-                self.red_team_score_label["text"] = change
-            else:
-                change = int(self.green_team_score_label["text"])
-                change += points
-                self.green_team_score_label["text"] = change
-
-        def hit_red_base(player):
-            for i in range(len(self.green_team_players)):
-                if(player == self.green_team_players[i]["id"]):
-                    if self.green_team_players[i]["hit_enemy_base"] == False:
-                        update_player_score(player, "green", 100)
-                        self.green_team_players[i]["hit_enemy_base"] = True
-                        
-        def hit_green_base(player):
-            for i in range(len(self.red_team_players)):
-                if(player == self.red_team_players[i]["id"]):
-                    if self.red_team_players[i]["hit_enemy_base"] == False:
-                        update_player_score(player, "red", 100)
-                        self.red_team_players[i]["hit_enemy_base"] = True
-
-        def hit_player(player, object):
-            for i in range(len(self.red_team_players)):
-                if(player == self.red_team_players[i]["id"]):
-                    player_team = "red"
-                else: 
-                    player_team = "green"
-            for i in range(len(self.red_team_players)):
-                if(object == self.red_team_players[i]["id"]):
-                    object_team = "red"
-                else:
-                    object_team = "green"
-            if player_team != object_team:
-                update_player_score(player, player_team, 10)
-            else:
-                update_player_score(player, player_team, -10)
-
-        def hit_self(player):
-            pass
-
-        def update_game_action(player, team, target):
-            if(target == "base"):
-                self.action_label["text"] = player + " has hit " + team + "'s base"
-                
-        def swap_player_positions(player, team, placement):
-            #if player gains points
-            if(placement):
-                #if player is on red team
-                if(team == "red"):
-                    for i in range(self.max_red_index):
-                        if(player == self.red_team_players[i]["id"]):
-                            current_position = self.red_players_label_list[i].place_info()
-                            #if player is not in top position and has greater score than player above, swap positions
-                            if(int(current_position["y"]) != 120 & (int(self.red_scores_list[i].cget("text")) > int(self.red_scores_list[i - 1].cget("text")))):
-                                #change positions in red team players
-                                player_change = self.red_team_players[i]
-                                self.red_team_players[i] = self.red_team_players[i - 1]
-                                self.red_team_players[i - 1] = player_change
-                                #change positions in red players labels list and change lable position
-                                label_change = self.red_players_label_list[i]
-                                label_change_position1 = self.red_players_label_list[i].place_info()
-                                label_change_position2 = self.red_players_label_list[i - 1].place_info()
-                                self.red_players_label_list[i].place(x=50,y=int(label_change_position2["y"]))
-                                self.red_players_label_list[i - 1].place(x=50,y=int(label_change_position1["y"]))
-                                self.red_players_label_list[i] = self.red_players_label_list[i - 1]
-                                self.red_players_label_list[i - 1] = label_change
-                                #change positions in red scores list and change label positions
-                                score_change = self.red_scores_list[i]
-                                score_change_position1 = self.red_scores_list[i].place_info()
-                                score_change_position2 = self.red_scores_list[i - 1].place_info()
-                                self.red_scores_list[i].place(x=250,y=int(score_change_position2["y"]))
-                                self.red_scores_list[i - 1].place(x=250,y=int(score_change_position1["y"]))
-                                self.red_scores_list[i] = self.red_scores_list[i - 1]
-                                self.red_scores_list[i - 1] = score_change
-                else:
-                    for i in range(self.max_green_index):
-                        if(player == self.green_team_players[i]["id"]):
-                            current_position = self.green_players_label_list[i].place_info()
-                            #if player is not in top position and has greater score than player above, swap positions
-                            if(int(current_position["y"]) != 120 & (int(self.green_scores_list[i].cget("text")) > int(self.green_scores_list[i - 1].cget("text")))):
-                                #change positions in green team players
-                                player_change = self.green_team_players[i]
-                                self.green_team_players[i] = self.green_team_players[i - 1]
-                                self.green_team_players[i - 1] = player_change
-                                #change positions in green players labels list and change lable position
-                                label_change = self.green_players_label_list[i]
-                                label_change_position1 = self.green_players_label_list[i].place_info()
-                                label_change_position2 = self.green_players_label_list[i - 1].place_info()
-                                self.green_players_label_list[i].place(x=550,y=int(label_change_position2["y"]))
-                                self.green_players_label_list[i - 1].place(x=550,y=int(label_change_position1["y"]))
-                                self.green_players_label_list[i] = self.green_players_label_list[i - 1]
-                                self.green_players_label_list[i - 1] = label_change
-                                #change positions in green scores list and change label positions
-                                score_change = self.green_scores_list[i]
-                                score_change_position1 = self.green_scores_list[i].place_info()
-                                score_change_position2 = self.green_scores_list[i - 1].place_info()
-                                self.green_scores_list[i].place(x=750,y=int(score_change_position2["y"]))
-                                self.green_scores_list[i - 1].place(x=750,y=int(score_change_position1["y"]))
-                                self.green_scores_list[i] = self.green_scores_list[i - 1]
-                                self.green_scores_list[i - 1] = score_change
-            else:
-                #if player is on red team
-                if(team == "red"):
-                    for i in range(self.max_red_index-1):
-                        if(player == self.red_team_players[i]["id"]):
-                            current_position = self.red_players_label_list[i].place_info()
-                            #if player is not in bottom position and has lower score than player below, swap positions
-                            if(int(current_position["y"]) != (120 + self.max_red_index * 30) & (int(self.red_scores_list[i].cget("text")) < int(self.red_scores_list[i + 1].cget("text")))):
-                                #change positions in red team players
-                                print("PRINT 2")
-                                player_change = self.red_team_players[i]
-                                self.red_team_players[i] = self.red_team_players[i + 1]
-                                self.red_team_players[i + 1] = player_change
-                                #change positions in red players labels list and change lable position
-                                label_change = self.red_players_label_list[i]
-                                label_change_position1 = self.red_players_label_list[i].place_info()
-                                label_change_position2 = self.red_players_label_list[i + 1].place_info()
-                                self.red_players_label_list[i].place(x=50,y=int(label_change_position2["y"]))
-                                self.red_players_label_list[i + 1].place(x=50,y=int(label_change_position1["y"]))
-                                self.red_players_label_list[i] = self.red_players_label_list[i + 1]
-                                self.red_players_label_list[i + 1] = label_change
-                                #change positions in red scores list and change label positions
-                                score_change = self.red_scores_list[i]
-                                score_change_position1 = self.red_scores_list[i].place_info()
-                                score_change_position2 = self.red_scores_list[i + 1].place_info()
-                                self.red_scores_list[i].place(x=250,y=int(score_change_position2["y"]))
-                                self.red_scores_list[i + 1].place(x=250,y=int(score_change_position1["y"]))
-                                self.red_scores_list[i] = self.red_scores_list[i + 1]
-                                self.red_scores_list[i + 1] = score_change
-                else:
-                    for i in range(self.max_green_index-1):
-                        if(player == self.green_team_players[i]["id"]):
-                            current_position = self.green_players_label_list[i].place_info()
-                            #if player is not in bottom position and has lower score than player below, swap positions
-                            if(int(current_position["y"]) != (120 + self.max_green_index * 30) & (int(self.green_scores_list[i].cget("text")) < int(self.green_scores_list[i + 1].cget("text")))):
-                                #change positions in green team players
-                                player_change = self.green_team_players[i]
-                                self.green_team_players[i] = self.green_team_players[i + 1]
-                                self.green_team_players[i + 1] = player_change
-                                #change positions in green players labels list and change lable position
-                                label_change = self.green_players_label_list[i]
-                                label_change_position1 = self.green_players_label_list[i].place_info()
-                                label_change_position2 = self.green_players_label_list[i + 1].place_info()
-                                self.green_players_label_list[i].place(x=550,y=int(label_change_position2["y"]))
-                                self.green_players_label_list[i + 1].place(x=550,y=int(label_change_position1["y"]))
-                                self.green_players_label_list[i] = self.green_players_label_list[i + 1]
-                                self.green_players_label_list[i + 1] = label_change
-                                #change positions in green scores list and change label positions
-                                score_change = self.green_scores_list[i]
-                                score_change_position1 = self.green_scores_list[i].place_info()
-                                score_change_position2 = self.green_scores_list[i + 1].place_info()
-                                self.green_scores_list[i].place(x=750,y=int(score_change_position2["y"]))
-                                self.green_scores_list[i + 1].place(x=750,y=int(score_change_position1["y"]))
-                                self.green_scores_list[i] = self.green_scores_list[i + 1]
-                                self.green_scores_list[i + 1] = score_change
-
-        countdown(360)
-        
-        update_player_score(2, "red", 10)
-
-        update_player_score(1, "red", 20)
-
-        update_player_score(2, "green", 10)
- 
-        update_player_score(1, "green", 20)
-
-        self.window.mainloop()
+    
         

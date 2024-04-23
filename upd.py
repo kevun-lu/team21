@@ -50,6 +50,7 @@ class Udp:
                 data = data.decode()
                 data = data.partition(':')
                 self.play_action.receive_player_action(data[0],data[2]) 
+                self.sendEquipmentId(data[2])
             except socket.timeout:
                 data = None
                 #self.__receiveSocket.close()
