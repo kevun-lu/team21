@@ -1,31 +1,27 @@
 import tkinter as tk
-import threading
 import time
 import random
-from PIL import Image, ImageTk
-from playsound import playsound
+import pygame
+
+pygame.mixer.init()
+num = random.randrange(4)
+match num:
+    case 0:
+        pygame.mixer.music.load("Track01.mp3")
+    case 1:
+        pygame.mixer.music.load("Track02.mp3")
+    case 2:
+        pygame.mixer.music.load("Track03.mp3")
+    case 3:
+        pygame.mixer.music.load("Track04.mp3")
+    case default:
+        pygame.mixer.music.load("Track05.mp3")
 
 def countdown_start():
     def update_countdown():
         nonlocal countdown_value
         if(countdown_value == 15):
-            num = random.randrange(4)
-            match num:
-                case 0:
-                    threading.Thread(target=playsound, args=("Track01.mp3",), daemon=True).start()
-                    print("Track 1")
-                case 1:
-                    threading.Thread(target=playsound, args=("Track02.mp3",), daemon=True).start()
-                    print("Track 2")
-                case 2:
-                    threading.Thread(target=playsound, args=("Track03.mp3",), daemon=True).start()
-                    print("Track 3")
-                case 3:
-                    threading.Thread(target=playsound, args=("Track04.mp3",), daemon=True).start()
-                    print("Track 4")
-                case 4:
-                    threading.Thread(target=playsound, args=("Track05.mp3",), daemon=True).start()
-                    print("Track 5")
+            pygame.mixer.music.play()
 
         if countdown_value > 0:
             # Update label with the current countdown value
