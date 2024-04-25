@@ -41,7 +41,7 @@ def countdown_start():
     root.attributes("-fullscreen", True)
 
     # Initialize countdown value
-    countdown_value = 1
+    countdown_value = 30
 
     # Use a label to display countdown
     label = tk.Label(root, text="", font=("Helvetica", 90), fg='orange', bg='black')
