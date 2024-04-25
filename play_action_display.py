@@ -154,7 +154,7 @@ class Play_Action_Display():
             width=20,
             height=2
         )
-        self.timer_label.place(x=800,y=550)
+        self.timer_label.place(x=800,y=575)
         # Create countdown timer
         self.countdown_label = Label(
             self.window,
@@ -165,7 +165,7 @@ class Play_Action_Display():
             width=15,
             height=2
         )
-        self.countdown_label.place(x=1000,y=550)
+        self.countdown_label.place(x=1000,y=575)
 
         for i in range(len(self.red_team_players)):
             if self.red_team_players[i]["codename"] == None:
