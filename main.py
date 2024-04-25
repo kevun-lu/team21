@@ -1,7 +1,7 @@
 from tkinter import *
 
 from dotenv import load_dotenv, find_dotenv
-load_dotenv(find_dotenv("env.env"))
+load_dotenv()
 
 from splash_screen import splash_screen
 from entryScreen import Entry_Screen
