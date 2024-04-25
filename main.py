@@ -1,7 +1,7 @@
 from tkinter import *
 
-from dotenv import load_dotenv
-load_dotenv()
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv("env.env"))
 
 from splash_screen import splash_screen
 from entryScreen import Entry_Screen
@@ -25,7 +25,7 @@ key = os.environ.get("supabase_key")
 supabase = create_client(url,key)
 play_action_display = Play_Action_Display()
 udp = Udp(play_action_display)
-thread3 = Thread(target = tg, args = (1, 3, 2, 4))
+thread3 = Thread(target = tg, args = (1, 2, 3, 4))
 thread3.start()
 
 splash_screen()
@@ -45,4 +45,3 @@ thread.join()
 # def startUDP():
 #     command = ["python3", "UDP_Client.py"]
 #     subprocess.run(command)
-
