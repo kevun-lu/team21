@@ -182,6 +182,8 @@ class Play_Action_Display():
             )
             if(i < 5):
                 self.red_player_label.place(x=50,y=120+i*30)
+            else:
+                self.red_player_label.place(x=-100,y=-100)
             self.red_players_label_list.append(self.red_player_label)
             self.red_player_score_label = Label(
                 self.window,
@@ -194,6 +196,8 @@ class Play_Action_Display():
             )
             if(i < 5):
                 self.red_player_score_label.place(x=250,y=120+i*30)
+            else:
+                self.red_player_score_label.place(x=-100,y=-100)
             self.red_scores_list.append(self.red_player_score_label)
             self.red_b_label = Label(
                 self.window,
@@ -204,7 +208,10 @@ class Play_Action_Display():
                 width=1,
                 height=1
             )
-            self.red_b_label.place(x=60,y=116+i*30)
+            if(i < 5):
+                self.red_b_label.place(x=560,y=116+i*30)
+            else:
+                self.red_b_label.place(x=-100,y=-100)
             self.red_b_list.append(self.red_b_label)
 
         for i in range(len(self.green_team_players)):
@@ -222,6 +229,8 @@ class Play_Action_Display():
             )
             if(i < 5):
                 self.green_player_label.place(x=550,y=120+i*30)
+            else:
+                self.green_player_label.place(x=-100,y=-100)
             self.green_players_label_list.append(self.green_player_label)
             self.green_player_score_label = Label(
                 self.window,
@@ -234,6 +243,8 @@ class Play_Action_Display():
             )
             if(i < 5):
                 self.green_player_score_label.place(x=750,y=120+i*30)
+            else:
+                self.green_player_score_label.place(x=-100,y=-100)
             self.green_scores_list.append(self.green_player_score_label)
             self.green_b_label = Label(
                 self.window,
@@ -244,7 +255,10 @@ class Play_Action_Display():
                 width=1,
                 height=1
             )
-            self.green_b_label.place(x=560,y=116+i*30)
+            if(i < 5):
+                self.green_b_label.place(x=560,y=116+i*30)
+            else:
+                self.green_b_label.place(x=-100,y=-100)
             self.green_b_list.append(self.green_b_label)
 
         self.countdown(360)
