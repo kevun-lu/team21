@@ -209,7 +209,7 @@ class Play_Action_Display():
                 height=1
             )
             if(i < 5):
-                self.red_b_label.place(x=560,y=116+i*30)
+                self.red_b_label.place(x=60,y=116+i*30)
             else:
                 self.red_b_label.place(x=-100,y=-100)
             self.red_b_list.append(self.red_b_label)
